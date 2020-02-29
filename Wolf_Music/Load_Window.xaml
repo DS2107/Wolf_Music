@@ -1,0 +1,55 @@
+﻿<Window x:Name="LoadWindow_WolfMusic" x:Class="Wolf_Music.Load_Window"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Wolf_Music"
+        mc:Ignorable="d"
+        Title="Load Wolf Music" Height="650" Width="1200" ResizeMode="NoResize" AllowsTransparency="true" WindowStyle="None" WindowStartupLocation="CenterScreen" Icon="Image/Logo.png">
+    <Window.Background>
+        <ImageBrush ImageSource="Image/BackGround_LoadWindow.jpg"/>
+    </Window.Background>
+    <Grid>
+        <Ellipse HorizontalAlignment="Left" Height="100" Margin="334,236,0,0" Stroke="#FFCB7A1A" VerticalAlignment="Top" Width="100" StrokeThickness="0">
+            <Ellipse.Effect>
+                <DropShadowEffect Direction="225" ShadowDepth="4" BlurRadius="20"/>
+            </Ellipse.Effect>
+            <Ellipse.Fill>
+                <ImageBrush ImageSource="Image/TitleWolf.jpg"/>
+            </Ellipse.Fill>
+            <Ellipse.RenderTransform>
+                <RotateTransform x:Name="rotate"
+                         CenterX="50"
+                         CenterY="50"/>
+            </Ellipse.RenderTransform>
+            <Ellipse.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard RepeatBehavior="Forever">
+                            <DoubleAnimation Storyboard.TargetName="rotate"
+                                             
+                                     Storyboard.TargetProperty="Angle" 
+                                     By="360" BeginTime="0:0:0.6" Duration="0:0:0.9"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Ellipse.Triggers>
+        </Ellipse>
+        <TextBlock
+  Text="Wolf Music"
+  Foreground="#FF9BA4A4" Margin="439,259,381,281" FontSize="72" TextAlignment="Center">
+            <TextBlock.Effect>
+                <DropShadowEffect
+      ShadowDepth="4"
+      Direction="225"
+      Color="Black"
+      Opacity="1"
+     BlurRadius="10"/>
+            </TextBlock.Effect>
+        </TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="451,200,0,0" FontSize="55" TextWrapping="Wrap" Text="Welcome in" VerticalAlignment="Top"/>
+
+
+
+    </Grid>
+</Window>
