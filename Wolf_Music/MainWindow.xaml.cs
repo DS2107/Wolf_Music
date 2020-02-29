@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -32,6 +34,7 @@ namespace Wolf_Music
         Music playSearchMusic = new Music();
         List<Music> stackMusic = new List<Music>();
         DispatcherTimer timerVideoTime = new DispatcherTimer();
+        Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
 
         public MainWindow(){
 
@@ -111,47 +114,7 @@ namespace Wolf_Music
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Button_OpenFile_Click(object sender, RoutedEventArgs e){
-
-            try
-            {
-                List<string> OpenMusic = new List<string>();
-                // Открываем диалоговое окно выбора папки
-                var dialog = new System.Windows.Forms.FolderBrowserDialog();
-                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
-
-                // Получаем Выбранную папку
-                string rootFolder = dialog.SelectedPath;
-
-                // Проходим по подпапкам и находим mp3 файлы
-                foreach (var file in Directory.EnumerateFiles(rootFolder, "*", SearchOption.AllDirectories))
-                {
-                    // Расширение файла 
-                    string extens = System.IO.Path.GetExtension(file);
-
-                    // находим mp3 файлы
-                    if (extens == ".mp3")
-                    {
-                        // Добавляем в список найденную музыку 
-                        OpenMusic.Add(file);
-
-                        // Переходим на вкладку музыки 
-                        TabMyMusic.SelectedIndex = 0;
-                        TabMyMusic.SelectedItem = TabMusic;
-                        TabMyMusic.SelectedItem = TabMyMusic.Items[1];
-
-                    }
-
-                }
-                DG_TabMusic.ItemsSource = null;  
-                DG_TabMusic.ItemsSource = playSearchMusic.SortSeachMusic(OpenMusic);
-                stackMusic = playSearchMusic.SortSeachMusic(OpenMusic);
-            }
-            catch
-            {
-
-            }
-            
-           
+            OpenPath();                   
         } // Button_OpenFile_Click
        
         /// <summary>
@@ -160,7 +123,7 @@ namespace Wolf_Music
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void DG_TabMusic_MouseDoubleClick(object sender, MouseButtonEventArgs e){
-            play = (Music)(((DataGrid)sender).SelectedItem);
+            play = (Music)(((System.Windows.Controls.DataGrid)sender).SelectedItem);
             if (play != null)
             {
                
@@ -246,5 +209,80 @@ namespace Wolf_Music
 
             }
         }
+
+        private void Button_Close2_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void Button_OpenPath_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFile();
+            
+        } //Button_OpenPath_Click
+
+        private void OpenFile()
+        {
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string filename = openFileDialog.FileName;
+                FileInfo fileInf = new FileInfo(filename);
+                Media.Source = new Uri(fileInf.FullName);
+                TB_MUsic.Text = fileInf.Name;
+                TB_album.Text = "";
+                Media.Play();
+
+            } // if    
+        } // OpenFile
+
+        private void OpenPath()
+        {
+            try
+            {
+                List<string> OpenMusic = new List<string>();
+                // Открываем диалоговое окно выбора папки
+                var dialog = new System.Windows.Forms.FolderBrowserDialog();
+                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+
+                // Получаем Выбранную папку
+                string rootFolder = dialog.SelectedPath;
+
+                // Проходим по подпапкам и находим mp3 файлы
+                foreach (var file in Directory.EnumerateFiles(rootFolder, "*", SearchOption.AllDirectories))
+                {
+                    // Расширение файла 
+                    string extens = System.IO.Path.GetExtension(file);
+
+                    // находим mp3 файлы
+                    if (extens == ".mp3")
+                    {
+                        // Добавляем в список найденную музыку 
+                        OpenMusic.Add(file);
+
+                        // Переходим на вкладку музыки 
+                        TabMyMusic.SelectedIndex = 0;
+                        TabMyMusic.SelectedItem = TabMusic;
+                        TabMyMusic.SelectedItem = TabMyMusic.Items[1];
+
+                    }
+
+                }
+                DG_TabMusic.ItemsSource = null;
+                DG_TabMusic.ItemsSource = playSearchMusic.SortSeachMusic(OpenMusic);
+                stackMusic = playSearchMusic.SortSeachMusic(OpenMusic);
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void Button_OpenMusic_Click(object sender, RoutedEventArgs e){
+            OpenFile();
+        } // Button_OpenMusic_Click
+
+        private void Button_OpenMusic_Path_Click(object sender, RoutedEventArgs e){
+            OpenPath();
+        } // Button_OpenMusic_Path_Click
     }
 }

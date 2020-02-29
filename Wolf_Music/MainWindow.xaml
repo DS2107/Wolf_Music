@@ -667,10 +667,10 @@
 
                             </DockPanel>
                             <DockPanel Margin="0,20,0,0" VerticalAlignment="Center" HorizontalAlignment="Right" Width="253" Height="43">
-                                <Image Source="Image\Folder3.png" Margin="22,8,0,10" Width="33"/>
+                                <Image Source="Image\File2.png" Margin="22,8,0,10" Width="33"/>
                                 <Button x:Name="Button_OpenPath"  Width="132" Content="Open file" 
                         VerticalAlignment="Center" FontFamily="Segoe UI Semibold" Margin="-40,5,12,7" 
-                        Height="26" FontSize="18" Foreground="#FFFFFBFB" Background="{x:Null}" Click="Button_OpenFile_Click" >
+                        Height="26" FontSize="18" Foreground="#FFFFFBFB" Background="{x:Null}" Click="Button_OpenPath_Click" >
                                     <Button.Template>
                                         <ControlTemplate TargetType="{x:Type Button}">
                                             <Border x:Name="buttonBorder" CornerRadius="10"
@@ -837,7 +837,7 @@
                                 <Image Source="Image\Close.png" Margin="22,8,0,10" Width="33"/>
                                 <Button x:Name="Button_Close2"  Width="132" Content="Exit" 
                         VerticalAlignment="Center" FontFamily="Segoe UI Semibold" Margin="-40,5,12,7" 
-                        Height="26" FontSize="18" Foreground="#FFFFFBFB" >
+                        Height="26" FontSize="18" Foreground="#FFFFFBFB" Click="Button_Close2_Click" >
                                     <Button.Template>
                                         <ControlTemplate TargetType="{x:Type Button}">
                                             <Border x:Name="buttonBorder" CornerRadius="10"
@@ -1032,9 +1032,38 @@
             </TabItem>
             <TabItem x:Name="TabMusic" Style="{DynamicResource TabItemStyle1}" Header="Music" Margin="150,30,-150,-30">
                 <Grid Margin="-4,32,-4,-34">
-                    <Button x:Name="Button_TIM_OpenMusic"  Width="132" Content="Open file" 
+                    <Button x:Name="Button_OpenMusic"  Width="132" Content="Open file" 
                         VerticalAlignment="Top" FontFamily="Segoe UI Semibold" Margin="567,-31,0,0" 
-                        Height="26" FontSize="18" Foreground="#FF212121" Background="Black" HorizontalAlignment="Left" >
+                        Height="26" FontSize="18" Foreground="#FF212121" Background="Black" HorizontalAlignment="Left" Click="Button_OpenMusic_Click" >
+                        <Button.Template>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border x:Name="buttonBorder" CornerRadius="5"
+                                    BorderBrush="{x:Null}" Background="#FFE29539"
+                                    Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"  >
+
+                                    <ContentControl Margin="{TemplateBinding Padding}"
+                                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                Content="{TemplateBinding Content}" />
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="true">
+                                        <Setter TargetName="buttonBorder" Property="Background" Value="#FF497893" />
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="true">
+                                        <Setter TargetName="buttonBorder" Property="Opacity" Value="0.6" />
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="false">
+                                        <Setter Property="Foreground" Value="Gray"/>
+                                        <Setter TargetName="buttonBorder" Property="Background" Value="LightGray"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <Button x:Name="Button_OpenMusic_Path"  Width="132" Content="Open path" 
+                        VerticalAlignment="Top" FontFamily="Segoe UI Semibold" Margin="725,-31,0,0" 
+                        Height="26" FontSize="18" Foreground="#FF212121" Background="Black" HorizontalAlignment="Left" Click="Button_OpenMusic_Path_Click" >
                         <Button.Template>
                             <ControlTemplate TargetType="{x:Type Button}">
                                 <Border x:Name="buttonBorder" CornerRadius="5"
