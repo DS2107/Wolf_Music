@@ -103,7 +103,7 @@ namespace Wolf_Music
         {
             // Переходим на вкладку альбома
             TabMyMusic.SelectedIndex = 1;
-            TabMyMusic.SelectedItem = TabAlbum;
+           
             TabMyMusic.SelectedItem = TabMyMusic.Items[2];
         }
 
@@ -284,5 +284,11 @@ namespace Wolf_Music
         private void Button_OpenMusic_Path_Click(object sender, RoutedEventArgs e){
             OpenPath();
         } // Button_OpenMusic_Path_Click
+
+        private void Button_NewPLayList_Click(object sender, RoutedEventArgs e)
+        {
+            New_Album new_Album = new New_Album();
+            new_Album.ShowDialog();
+        }
     }
 }

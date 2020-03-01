@@ -90,8 +90,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Classes\Last_PlayList.cs" />
-    <Compile Include="Classes\PlayList.cs" />
     <Compile Include="Classes\SearchClass.cs" />
     <Compile Include="Config\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -101,7 +99,6 @@
     <Compile Include="Classes\Last_Albums.cs" />
     <Compile Include="Classes\Last_Music.cs" />
     <Compile Include="Classes\Music.cs" />
-    <Compile Include="Classes\PlayMusic.cs" />
     <Compile Include="Interfaces\IAlbums.cs" />
     <Compile Include="Interfaces\IMusic.cs" />
     <Compile Include="Interfaces\IPlayList.cs" />
@@ -114,8 +111,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="New_Album.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="New_Album.xaml.cs">
+      <DependentUpon>New_Album.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

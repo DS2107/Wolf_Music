@@ -736,41 +736,7 @@
                                 <Image Source="Image\PlayList.png" Margin="22,8,0,10" Width="33"/>
                                 <Button x:Name="Button_NewPLayList"  Width="132" Content="New playlist" 
                         VerticalAlignment="Center" FontFamily="Segoe UI Semibold" Margin="-40,5,12,7" 
-                        Height="26" FontSize="18" Foreground="#FFFFFBFB" >
-                                    <Button.Template>
-                                        <ControlTemplate TargetType="{x:Type Button}">
-                                            <Border x:Name="buttonBorder" CornerRadius="10"
-                                    BorderBrush="#FFBB2727" Background="{x:Null}"
-                                    Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"  >
-
-                                                <ContentControl Margin="{TemplateBinding Padding}"
-                                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                Content="{TemplateBinding Content}" />
-                                            </Border>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="true">
-                                                    <Setter TargetName="buttonBorder" Property="Background" Value="#FF497893" />
-                                                </Trigger>
-                                                <Trigger Property="IsPressed" Value="true">
-                                                    <Setter TargetName="buttonBorder" Property="Opacity" Value="0.6" />
-                                                </Trigger>
-                                                <Trigger Property="IsEnabled" Value="false">
-                                                    <Setter Property="Foreground" Value="Gray"/>
-                                                    <Setter TargetName="buttonBorder" Property="Background" Value="LightGray"/>
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                </Button>
-
-                            </DockPanel>
-
-                            <DockPanel Margin="0,20,0,0" VerticalAlignment="Center" HorizontalAlignment="Right" Width="253" Height="43">
-                                <Image Source="Image\NewAlbomIco.png" Margin="22,8,0,10" Width="33"/>
-                                <Button x:Name="Button_NewAlbom"  Width="132" Content="New album" 
-                        VerticalAlignment="Center" FontFamily="Segoe UI Semibold" Margin="-40,5,12,7" 
-                        Height="26" FontSize="18" Foreground="#FFFFFBFB" >
+                        Height="26" FontSize="18" Foreground="#FFFFFBFB" Click="Button_NewPLayList_Click" >
                                     <Button.Template>
                                         <ControlTemplate TargetType="{x:Type Button}">
                                             <Border x:Name="buttonBorder" CornerRadius="10"
@@ -1111,72 +1077,7 @@
                     <TextBox Style="{StaticResource MyTextBox}" HorizontalAlignment="Left" Height="25" Margin="10,13,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Top" Width="517" BorderBrush="{x:Null}" FontSize="14"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="TabAlbum" Style="{DynamicResource TabItemStyle1}" Header="Albums" Margin="200,30,-200,-30">
-                <Grid Margin="-4,32,-4,-34">
-                    <Button x:Name="Button_TIA_NewAlmub"  Width="132" Content="New Album" 
-                        VerticalAlignment="Top" FontFamily="Segoe UI Semibold" Margin="567,-31,0,0" 
-                        Height="26" FontSize="18" Foreground="#FF212121" Background="Black" HorizontalAlignment="Left" >
-                        <Button.Template>
-                            <ControlTemplate TargetType="{x:Type Button}">
-                                <Border x:Name="buttonBorder" CornerRadius="5"
-                                    BorderBrush="{x:Null}" Background="#FFE29539"
-                                    Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"  >
-
-                                    <ContentControl Margin="{TemplateBinding Padding}"
-                                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                Content="{TemplateBinding Content}" />
-                                </Border>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="true">
-                                        <Setter TargetName="buttonBorder" Property="Background" Value="#FF497893" />
-                                    </Trigger>
-                                    <Trigger Property="IsPressed" Value="true">
-                                        <Setter TargetName="buttonBorder" Property="Opacity" Value="0.6" />
-                                    </Trigger>
-                                    <Trigger Property="IsEnabled" Value="false">
-                                        <Setter Property="Foreground" Value="Gray"/>
-                                        <Setter TargetName="buttonBorder" Property="Background" Value="LightGray"/>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
-                    <Rectangle Fill="Black" Opacity="0.5" Margin="0,0,0,61"/>
-                    <TextBlock HorizontalAlignment="Right" Margin="0,10,38,0" TextWrapping="Wrap" Text="ALBUMS" VerticalAlignment="Top" FontSize="35" Width="139" Height="43" Foreground="#FFAAA9A9"/>
-                    <Image HorizontalAlignment="Right" Height="44" Margin="0,10,182,0" VerticalAlignment="Top" Width="52" Source="Image\AlbumPage.png"/>
-                    <Grid Margin="0,58,0,0">
-
-
-                        <DataGrid HeadersVisibility="Column" CanUserAddRows="false"  HorizontalGridLinesBrush="{x:Null}"  VerticalGridLinesBrush="{x:Null}" AutoGenerateColumns="False" x:Name="DG_TabAlbums" BorderBrush="{x:Null}" Background="{x:Null}" Margin="458,0,10,73" FontSize="16">
-
-                            <DataGrid.Effect>
-                                <DropShadowEffect Direction="215" ShadowDepth="3" BlurRadius="10"/>
-                            </DataGrid.Effect>
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Music" Binding="{Binding Path=Title}" Width="240" />
-                                <DataGridHyperlinkColumn Header="Time" Binding="{Binding Path=Company}" Width="*" />
-
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </Grid>
-                    <Grid Margin="0,58,785,61" >
-                        <DataGrid HeadersVisibility="Column" CanUserAddRows="false"  HorizontalGridLinesBrush="{x:Null}"  VerticalGridLinesBrush="{x:Null}" AutoGenerateColumns="False" x:Name="DG_TabAlbum" BorderBrush="{x:Null}" Background="{x:Null}" FontSize="16" HorizontalAlignment="Left" Width="455">
-
-                            <DataGrid.Effect>
-                                <DropShadowEffect Direction="215" ShadowDepth="7" BlurRadius="10"/>
-                            </DataGrid.Effect>
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Album" Binding="{Binding Path=Title}" Width="240" />
-                                <DataGridHyperlinkColumn Header="Songs" Binding="{Binding Path=Company}" Width="*" />
-
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </Grid>
-                    <TextBox Style="{StaticResource MyTextBox}" HorizontalAlignment="Left" Height="25" Margin="10,13,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Top" Width="517" BorderBrush="{x:Null}" FontSize="14"/>
-                </Grid>
-            </TabItem>
-            <TabItem Style="{DynamicResource TabItemStyle1}" Header="Playlist" Margin="250,30,-250,-30">
+            <TabItem Style="{DynamicResource TabItemStyle1}" Header="Playlist" Margin="157,31,-157,-31">
                 <Grid Margin="-4,32,-4,-34">
                     <Button x:Name="Button_TIP_NewPlayList"  Width="132" Content="New PlayList" 
                         VerticalAlignment="Top" FontFamily="Segoe UI Semibold" Margin="567,-31,0,0" 
