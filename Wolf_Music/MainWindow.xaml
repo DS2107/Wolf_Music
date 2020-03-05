@@ -9,9 +9,9 @@
         AllowsTransparency="true"
         WindowStartupLocation="CenterScreen" Icon="Image\Logo.png" MouseLeftButtonDown="MainWindow_WolfMusic_MouseLeftButtonDown">
     <Window.Resources>
-        
-        
-        
+
+
+
         <Style x:Key="ScaleStyle" TargetType="Image">
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
@@ -581,18 +581,22 @@
 
                     </Button>
                     <Image Source="Image/mix.png" Margin="458,18,0,-12" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="34"/>
-                    <TextBlock x:Name="timemus" Text="" Margin="157,29,1012,-16" FontSize="14" Foreground="#FF978E8E"/>
                 </Grid>
                 <Rectangle Opacity="0.8" Fill="Black" Margin="0,0,0,-24"/>
-                <DockPanel VerticalAlignment="Center" Height="43" Margin="0,2,0,-13" HorizontalAlignment="Left" >
-                    <Image Source="Image\NewAlbomIco.png" Width="50" Margin="0,6"/>
+                <DockPanel VerticalAlignment="Center" Height="43" Margin="5,0,0,-11" HorizontalAlignment="Left" >
+                    <Image Source="Image\NewAlbomIco.png" Width="50" Margin="0,0,0,0" HorizontalAlignment="Left"/>
                     <TextBlock x:Name="TB_MUsic" Text="Better Now" Margin="0,5,0,19"  FontSize="14" Foreground="White"/>
-                    <TextBlock x:Name="TB_album" Text="'Album'" Margin="-70,24,20,0"  FontSize="14" Foreground="#FF978E8E"/>
-
 
 
 
                 </DockPanel>
+                <DockPanel VerticalAlignment="Center" Height="29" Margin="35,23,0,-20" HorizontalAlignment="Left" Width="190" >
+
+                    <TextBlock x:Name="TB_album" Margin="21,0,0,0"   FontSize="14" Foreground="#FF978E8E" HorizontalAlignment="Left" VerticalAlignment="Center"><Run Text="'Album'"/></TextBlock>
+                    <TextBlock x:Name="timemus" Text="" FontSize="14" Foreground="#FF978E8E" Height="19"  Width="105" Margin="40,0,0,0"/>
+                </DockPanel>
+                
+                
             </Grid>
         </StackPanel>
         <Grid Height="632" VerticalAlignment="Bottom">
@@ -1063,14 +1067,22 @@
 
 
                         <DataGrid  HeadersVisibility="Column" CanUserAddRows="false"  HorizontalGridLinesBrush="{x:Null}"  VerticalGridLinesBrush="{x:Null}" AutoGenerateColumns="False"  x:Name="DG_TabMusic" BorderBrush="{x:Null}" Background="{x:Null}" Margin="10,0,10,73" FontSize="16" MouseDoubleClick="DG_TabMusic_MouseDoubleClick">
-
+                            <DataGrid.ContextMenu>
+                                <ContextMenu ItemsSource="{Binding SelectedItem, Mode=TwoWay}">
+                                    <MenuItem Header="Edit"  />
+                                    <MenuItem Header="Delete"  />
+                                    <MenuItem Header="Go to folder"  />
+                                    
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
                             <DataGrid.Effect>
                                 <DropShadowEffect Direction="215" ShadowDepth="7" BlurRadius="10"/>
                             </DataGrid.Effect>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Music" Binding="{Binding  name}" Width="240" />
+                               
+                                <DataGridTextColumn Header="Music" Binding="{Binding  name}"  />
                                 <DataGridHyperlinkColumn Header="Time" Binding="{Binding time}" Width="*" />
-
+                                <DataGridHyperlinkColumn Header="Album" Binding="{Binding music_album_playlist}" Width="*" />
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>

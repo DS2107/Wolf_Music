@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
@@ -35,21 +35,11 @@ namespace Wolf_Music
         List<Music> stackMusic = new List<Music>();
         DispatcherTimer timerVideoTime = new DispatcherTimer();
         Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
-
+        Thread myThread;
         public MainWindow(){
 
             InitializeComponent();
-            List<Phone> phonesList = new List<Phone>
-{
-                        new Phone { Title="The House of the Rising Sun"+"\n"+"The Animals", Company="3:20" },
-                        new Phone {Title="Uninvited Guest"+"\n"+"Disturbed", Company="2:20"},
-                        new Phone {Title="Birds"+"\n"+"Imagine Dragons", Company="3:10" },
-                         new Phone {Title="The Violence"+"\n"+"Asking Alexandria", Company="3:10" },
-                          new Phone {Title="Escape (The Pina Colada Song)"+"\n"+"Rupert Holmes", Company="3:10" }
-      
-                    };
-                                MyDataGrgid.ItemsSource = phonesList;
-                                DG_TabMusic.ItemsSource = phonesList;
+           
 
             SliderPlay.AddHandler(MouseLeftButtonUpEvent,
                       new MouseButtonEventHandler(timeSlider_MouseLeftButtonUp),
@@ -114,7 +104,19 @@ namespace Wolf_Music
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Button_OpenFile_Click(object sender, RoutedEventArgs e){
-            OpenPath();                   
+            // создаем новый поток\
+            // Открываем диалоговое окно выбора папки
+            string rootFolder ="";
+           
+                var dialog = new System.Windows.Forms.FolderBrowserDialog();
+                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+
+                // Получаем Выбранную папку
+                rootFolder = dialog.SelectedPath;
+                 
+            myThread = new Thread(new ParameterizedThreadStart(OpenPath));
+            myThread.Start(rootFolder); // запускаем поток
+                              
         } // Button_OpenFile_Click
        
         /// <summary>
@@ -146,6 +148,7 @@ namespace Wolf_Music
             timerVideoTime.Interval = TimeSpan.FromSeconds(1);
             timerVideoTime.Tick += new EventHandler(timer_Tick);
             timerVideoTime.Start();
+          
         } // Media_MediaOpened
 
         private void timer_Tick(object sender, EventArgs e)
@@ -235,20 +238,16 @@ namespace Wolf_Music
             } // if    
         } // OpenFile
 
-        private void OpenPath()
+        private  void OpenPath(object rootFolder)
         {
-            try
-            {
+           
                 List<string> OpenMusic = new List<string>();
-                // Открываем диалоговое окно выбора папки
-                var dialog = new System.Windows.Forms.FolderBrowserDialog();
-                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
-
-                // Получаем Выбранную папку
-                string rootFolder = dialog.SelectedPath;
-
-                // Проходим по подпапкам и находим mp3 файлы
-                foreach (var file in Directory.EnumerateFiles(rootFolder, "*", SearchOption.AllDirectories))
+               
+                string folder = Convert.ToString(rootFolder);
+            // Проходим по подпапкам и находим mp3 файлы
+            if (folder != "")
+            {
+                foreach (var file in Directory.EnumerateFiles(folder, "*", SearchOption.AllDirectories))
                 {
                     // Расширение файла 
                     string extens = System.IO.Path.GetExtension(file);
@@ -258,23 +257,20 @@ namespace Wolf_Music
                     {
                         // Добавляем в список найденную музыку 
                         OpenMusic.Add(file);
-
-                        // Переходим на вкладку музыки 
-                        TabMyMusic.SelectedIndex = 0;
-                        TabMyMusic.SelectedItem = TabMusic;
-                        TabMyMusic.SelectedItem = TabMyMusic.Items[1];
-
                     }
 
                 }
-                DG_TabMusic.ItemsSource = null;
-                DG_TabMusic.ItemsSource = playSearchMusic.SortSeachMusic(OpenMusic);
-                stackMusic = playSearchMusic.SortSeachMusic(OpenMusic);
-            }
-            catch
-            {
+                // Переходим на вкладку музыки 
+                Dispatcher.Invoke(() => TabMyMusic.SelectedIndex = 0);
+                Dispatcher.Invoke(() => TabMyMusic.SelectedItem = TabMusic);
+                Dispatcher.Invoke(() => TabMyMusic.SelectedItem = TabMyMusic.Items[1]);
+                Dispatcher.Invoke(() => DG_TabMusic.ItemsSource = null);
+                Dispatcher.Invoke(() => DG_TabMusic.ItemsSource = playSearchMusic.SortSeachMusic(OpenMusic));
+                Dispatcher.Invoke(() => stackMusic = playSearchMusic.SortSeachMusic(OpenMusic));
+                myThread.Abort();//прерываем поток
+                myThread.Join(500);//таймаут на завершение
+            } // if
 
-            }
         }
 
         private void Button_OpenMusic_Click(object sender, RoutedEventArgs e){
@@ -282,7 +278,15 @@ namespace Wolf_Music
         } // Button_OpenMusic_Click
 
         private void Button_OpenMusic_Path_Click(object sender, RoutedEventArgs e){
-            OpenPath();
+            // создаем новый поток\
+            // Открываем диалоговое окно выбора папки
+            var dialog = new System.Windows.Forms.FolderBrowserDialog();
+            System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+
+            // Получаем Выбранную папку
+            string rootFolder = dialog.SelectedPath;
+            myThread = new Thread(new ParameterizedThreadStart(OpenPath));
+            myThread.Start(rootFolder); // запускаем поток
         } // Button_OpenMusic_Path_Click
 
         private void Button_NewPLayList_Click(object sender, RoutedEventArgs e)

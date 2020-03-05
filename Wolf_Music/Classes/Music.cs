@@ -53,13 +53,19 @@ namespace Wolf_Music.Classes
             
             foreach (var fileMusic in path)
             {
+               
                 FileInfo fileInf = new FileInfo(fileMusic);
                 var audio = TagLib.File.Create(Convert.ToString(fileInf));
+                if (audio.Tag.Album == null)
+                    music_album_playlist = "NO album";
+                else
+                    music_album_playlist = audio.Tag.Album;
+
                 Music music = new Music
                 {
                     name = fileInf.Name,
                     full_name = fileInf.FullName,
-                    music_album_playlist = "",
+                    music_album_playlist = music_album_playlist,
                     time = audio.Properties.Duration.ToString("mm\\:ss")
                 };
                 musics.Add(music);
