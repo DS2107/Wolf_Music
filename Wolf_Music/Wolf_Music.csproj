@@ -90,6 +90,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Classes\Music_Editing.cs" />
     <Compile Include="Classes\SearchClass.cs" />
     <Compile Include="Config\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>

@@ -838,160 +838,15 @@
                             </DockPanel>
                         </StackPanel>
                     </Grid>
-                    <Grid Margin="39,72,0,130" HorizontalAlignment="Left" Width="589">
-
-
-                        <Button x:Name="ButtonRecent_Album"  Width="140" Content="Recent Albums" 
-                        VerticalAlignment="Top" FontFamily="Segoe UI Semibold" Margin="194,92,255,0" 
-                        Height="26" FontSize="18" Foreground="#FFFFFBFB" >
-                            <Button.Template>
-                                <ControlTemplate TargetType="{x:Type Button}">
-                                    <Border x:Name="buttonBorder" CornerRadius="10"
-                                    BorderBrush="#FFBB2727" Background="{x:Null}"
-                                    Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"  >
-
-                                        <ContentControl Margin="{TemplateBinding Padding}"
-                                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                Content="{TemplateBinding Content}" />
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="true">
-                                            <Setter TargetName="buttonBorder" Property="Background" Value="#FF497893" />
-                                        </Trigger>
-                                        <Trigger Property="IsPressed" Value="true">
-                                            <Setter TargetName="buttonBorder" Property="Opacity" Value="0.6" />
-                                        </Trigger>
-                                        <Trigger Property="IsEnabled" Value="false">
-                                            <Setter Property="Foreground" Value="Gray"/>
-                                            <Setter TargetName="buttonBorder" Property="Background" Value="LightGray"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
-
-
-                        <Image  Stretch="Uniform" x:Name="I_LastAlbum" Source="Image\Aa.jpg" Margin="194,118,54,124" MouseDown="I_LastAlbum_MouseDown" VerticalAlignment="Top" Height="199" >
-                            <Image.Triggers>
-                                <EventTrigger RoutedEvent="Image.MouseEnter">
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <ThicknessAnimation
-              
-                To="194,118,43,0"
-                Duration="0:0:0.5"
-                Storyboard.TargetProperty
-                ="Margin"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-
-                                <EventTrigger RoutedEvent="Image.MouseLeave">
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <ThicknessAnimation
-              
-                To="194,118,54,124"
-                Duration="0:0:0.5"
-                Storyboard.TargetProperty
-                ="Margin"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-                            </Image.Triggers>
-
-                            <Image.Effect>
-                                <DropShadowEffect x:Name="ImageShadow" Direction="213" ShadowDepth="7" BlurRadius="10"/>
-
-                            </Image.Effect>
-
-
-
-
-
-
-                        </Image>
-
-                    </Grid>
-                    <Grid  Margin="540,153,0,200" HorizontalAlignment="Left" Width="321" >
-
-
-                        <Button  x:Name="ButtonRecent_PlayList"  Width="140" Content="Recent PlayList" 
-                        VerticalAlignment="Top" FontFamily="Segoe UI Semibold" Margin="104,10,77,0" 
-                        Height="26" FontSize="18" Foreground="#FFFFFBFB" >
-                            <Button.Template>
-                                <ControlTemplate TargetType="{x:Type Button}">
-                                    <Border x:Name="buttonBorder" CornerRadius="10"
-                                    BorderBrush="#FFBB2727" Background="{x:Null}"
-                                    Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"  >
-
-                                        <ContentControl Margin="{TemplateBinding Padding}"
-                                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                Content="{TemplateBinding Content}" />
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="true">
-                                            <Setter TargetName="buttonBorder" Property="Background" Value="#FF497893" />
-                                        </Trigger>
-                                        <Trigger Property="IsPressed" Value="true">
-                                            <Setter TargetName="buttonBorder" Property="Opacity" Value="0.6" />
-                                        </Trigger>
-                                        <Trigger Property="IsEnabled" Value="false">
-                                            <Setter Property="Foreground" Value="Gray"/>
-                                            <Setter TargetName="buttonBorder" Property="Background" Value="LightGray"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
-
-
-                        <Image Stretch="Uniform" x:Name="Image1" Source="Image\AA2.jpg" Margin="104,37,38,0" Height="178" VerticalAlignment="Top" >
-                            <Image.Triggers>
-                                <EventTrigger RoutedEvent="Image.MouseEnter">
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <ThicknessAnimation
-              
-                To="104,37,17,49"
-                Duration="0:0:0.5"
-                Storyboard.TargetProperty
-                ="Margin"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-
-                                <EventTrigger RoutedEvent="Image.MouseLeave">
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <ThicknessAnimation
-              
-                To="104,37,38,64"
-                Duration="0:0:0.5"
-                Storyboard.TargetProperty
-                ="Margin"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-                            </Image.Triggers>
-                            <Image.Effect>
-                                <DropShadowEffect Direction="213" ShadowDepth="7" BlurRadius="10"/>
-                            </Image.Effect>
-
-
-                        </Image>
-
-                    </Grid>
-                    <DataGrid HeadersVisibility="Column" CanUserAddRows="false"  HorizontalGridLinesBrush="{x:Null}"  VerticalGridLinesBrush="{x:Null}" AutoGenerateColumns="False" x:Name="MyDataGrgid" BorderBrush="{x:Null}" Background="{x:Null}" Margin="878,185,10,184">
+                    <Grid  Margin="540,153,0,200" HorizontalAlignment="Left" Width="321" />
+                    <DataGrid HeadersVisibility="Column" CanUserAddRows="false"  HorizontalGridLinesBrush="{x:Null}"  VerticalGridLinesBrush="{x:Null}" AutoGenerateColumns="False" x:Name="MyDataGrgid" BorderBrush="{x:Null}" Background="{x:Null}" Margin="230,153,10,81">
                         <DataGrid.Effect>
                             <DropShadowEffect Direction="215" ShadowDepth="7" BlurRadius="10"/>
                         </DataGrid.Effect>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Music" Binding="{Binding Path=Title}" Width="240" />
-                            <DataGridHyperlinkColumn Header="Time" Binding="{Binding Path=Company}" Width="*" />
-
+                            <DataGridTextColumn Header="Music" Binding="{Binding  name}"  />
+                            <DataGridHyperlinkColumn Header="Time" Binding="{Binding time}" Width="*" />
+                            <DataGridHyperlinkColumn Header="Album" Binding="{Binding music_album_playlist}" Width="*" />
                         </DataGrid.Columns>
                     </DataGrid>
                     <TextBlock HorizontalAlignment="Right" Margin="0,10,30,0" TextWrapping="Wrap" Text="HOME PAGE" VerticalAlignment="Top" FontSize="35" Width="207" Height="43" Foreground="#FFAAA9A9"/>
@@ -1069,9 +924,9 @@
                         <DataGrid  HeadersVisibility="Column" CanUserAddRows="false"  HorizontalGridLinesBrush="{x:Null}"  VerticalGridLinesBrush="{x:Null}" AutoGenerateColumns="False"  x:Name="DG_TabMusic" BorderBrush="{x:Null}" Background="{x:Null}" Margin="10,0,10,73" FontSize="16" MouseDoubleClick="DG_TabMusic_MouseDoubleClick">
                             <DataGrid.ContextMenu>
                                 <ContextMenu ItemsSource="{Binding SelectedItem, Mode=TwoWay}">
-                                    <MenuItem Header="Edit"  />
-                                    <MenuItem Header="Delete"  />
-                                    <MenuItem Header="Go to folder"  />
+                                    <MenuItem Header="Edit" Click="MenuItem_Click"  />
+                                    <MenuItem Header="Delete" Click="MenuItem_Click_1"  />
+                                    <MenuItem Header="Go to folder" Click="MenuItem_Click_2"  />
                                     
                                 </ContextMenu>
                             </DataGrid.ContextMenu>

@@ -17,30 +17,40 @@ using Wolf_Music.Classes;
 
 namespace Wolf_Music
 {
-   
-   
-    public class Phone
-    {
-        public string Title { get; set; }
-        public string Company { get; set; }
-       
-    }
 
     public partial class MainWindow : Window
     {
-        bool Max_Min = false;
-        Music play;
+        /// <summary>
+        /// Правая кнопка мышки по музыке 
+        /// </summary>
+        Music_Editing Music_Editing;
+        /// <summary>
+        /// Объект класса Music для доступа к методам
+        /// </summary>
+        private Music play;
+
+        /// <summary>
+        /// Указывает время для слайдера
+        /// </summary>
         private TimeSpan TotalTime;
-        Music playSearchMusic = new Music();
+
+        /// <summary>
+        /// Список найденной музыки
+        /// </summary>
         List<Music> stackMusic = new List<Music>();
+
+        /// <summary>
+        /// Таймер для слайдера
+        /// </summary>
         DispatcherTimer timerVideoTime = new DispatcherTimer();
-        Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
+
+        //Поток для файлов      
         Thread myThread;
+
+        #region Window
         public MainWindow(){
 
             InitializeComponent();
-           
-
             SliderPlay.AddHandler(MouseLeftButtonUpEvent,
                       new MouseButtonEventHandler(timeSlider_MouseLeftButtonUp),
                       true);
@@ -51,32 +61,54 @@ namespace Wolf_Music
 
         }
 
-        private void timeSlider_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        /// <summary>
+        /// Закртыь окно
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Close2_Click(object sender, RoutedEventArgs e)
         {
-            timerVideoTime.Stop();
-           
+            this.Close();
         }
 
-        private void timeSlider_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        /// <summary>
+        /// Двигать окно
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainWindow_WolfMusic_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Media.Position = TimeSpan.FromSeconds(SliderPlay.Value);
-            timerVideoTime.Start();           
-        }
-    
-
-        private void MainWindow_WolfMusic_MouseLeftButtonDown(object sender, MouseButtonEventArgs e){
             this.DragMove();
         } // MainWindow_WolfMusic_MouseLeftButtonDown
 
-        private void Button_Close_Click(object sender, RoutedEventArgs e){
+        /// <summary>
+        /// Закрыть окно
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Close_Click(object sender, RoutedEventArgs e)
+        {
             this.Close();
         } // Button_Close_Click
 
-        private void Button_Minim_Click(object sender, RoutedEventArgs e){
+        /// <summary>
+        /// Свернуть
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Minim_Click(object sender, RoutedEventArgs e)
+        {
             WindowState = WindowState.Minimized;
         } // Button_Minim_Click
 
-        private void Button_Collapse_Click(object sender, RoutedEventArgs e){
+        /// <summary>
+        /// Развернуть свернуть
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Collapse_Click(object sender, RoutedEventArgs e)
+        {
+            bool Max_Min = false;
             if (Max_Min == false)
             {
                 WindowState = WindowState.Maximized;
@@ -89,15 +121,32 @@ namespace Wolf_Music
             }
         } // Button_Collapse_Click
 
-        private void I_LastAlbum_MouseDown(object sender, MouseButtonEventArgs e)
+        #endregion Window
+
+        #region Slider
+        /// <summary>
+        /// Переключение музыки на слайдере
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void timeSlider_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            // Переходим на вкладку альбома
-            TabMyMusic.SelectedIndex = 1;
-           
-            TabMyMusic.SelectedItem = TabMyMusic.Items[2];
-        }
+            timerVideoTime.Stop();
+        } // timeSlider_MouseLeftButtonDown
 
+        /// <summary>
+        /// Переключение музыки на слайдере
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void timeSlider_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            Media.Position = TimeSpan.FromSeconds(SliderPlay.Value);
+            timerVideoTime.Start();
+        } // timeSlider_MouseLeftButtonUp
+        #endregion
 
+        #region PLayMusic
         /// <summary>
         /// Открыть папку с музыкой
         /// </summary>
@@ -137,13 +186,44 @@ namespace Wolf_Music
             }
         } // DG_TabMusic_MouseDoubleClick
 
-       
+        private void Button_OpenMusic_Path_Click(object sender, RoutedEventArgs e)
+        {
+            // создаем новый поток\
+            // Открываем диалоговое окно выбора папки
+            var dialog = new System.Windows.Forms.FolderBrowserDialog();
+            System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+
+            // Получаем Выбранную папку
+            string rootFolder = dialog.SelectedPath;
+            myThread = new Thread(new ParameterizedThreadStart(OpenPath));
+            myThread.Start(rootFolder); // запускаем поток
+        } // Button_OpenMusic_Path_Click
+
+
+        private void Button_OpenPath_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFile();
+
+        } //Button_OpenPath_Click
+
+        private void Button_OpenMusic_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFile();
+        } // Button_OpenMusic_Click
+        #endregion
+
+        #region MediaElem
+        /// <summary>
+        /// Открытие (проигрывание) Медиа Элемента
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Media_MediaOpened(object sender, RoutedEventArgs e)
         {
             TotalTime = Media.NaturalDuration.TimeSpan;
             SliderPlay.Maximum = TotalTime.TotalSeconds;
          
-            // Create a timer that will update the counters and the time slider
+          
           
             timerVideoTime.Interval = TimeSpan.FromSeconds(1);
             timerVideoTime.Tick += new EventHandler(timer_Tick);
@@ -192,6 +272,7 @@ namespace Wolf_Music
             }
         } //timer_Tick
 
+        
         private void Button_pause_Click(object sender, RoutedEventArgs e){
             Media.Pause();
         } // Button_pause_Click
@@ -200,6 +281,7 @@ namespace Wolf_Music
         {
             Media.Play();           
         }
+
 
         private void SliderVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -213,19 +295,15 @@ namespace Wolf_Music
             }
         }
 
-        private void Button_Close2_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
+        #endregion
 
-        private void Button_OpenPath_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFile();
-            
-        } //Button_OpenPath_Click
-
+        #region OPEN
+        /// <summary>
+        /// Открыть файл
+        /// </summary>
         private void OpenFile()
         {
+            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
                 string filename = openFileDialog.FileName;
@@ -238,9 +316,13 @@ namespace Wolf_Music
             } // if    
         } // OpenFile
 
-        private  void OpenPath(object rootFolder)
+        /// <summary>
+        /// Открыть папку
+        /// </summary>
+        /// <param name="rootFolder">имя папки</param>
+        private void OpenPath(object rootFolder)
         {
-           
+            play = new Music();
                 List<string> OpenMusic = new List<string>();
                
                 string folder = Convert.ToString(rootFolder);
@@ -265,34 +347,62 @@ namespace Wolf_Music
                 Dispatcher.Invoke(() => TabMyMusic.SelectedItem = TabMusic);
                 Dispatcher.Invoke(() => TabMyMusic.SelectedItem = TabMyMusic.Items[1]);
                 Dispatcher.Invoke(() => DG_TabMusic.ItemsSource = null);
-                Dispatcher.Invoke(() => DG_TabMusic.ItemsSource = playSearchMusic.SortSeachMusic(OpenMusic));
-                Dispatcher.Invoke(() => stackMusic = playSearchMusic.SortSeachMusic(OpenMusic));
-                myThread.Abort();//прерываем поток
-                myThread.Join(500);//таймаут на завершение
+                Dispatcher.Invoke(() => DG_TabMusic.ItemsSource = play.SortSeachMusic(OpenMusic));
+                Dispatcher.Invoke(() => stackMusic = play.SortSeachMusic(OpenMusic));
+                myThread.Abort();   //прерываем поток
+                myThread.Join(500); //таймаут на завершение
             } // if
 
-        }
+        } // OpenPath
 
-        private void Button_OpenMusic_Click(object sender, RoutedEventArgs e){
-            OpenFile();
-        } // Button_OpenMusic_Click
+        #endregion
 
-        private void Button_OpenMusic_Path_Click(object sender, RoutedEventArgs e){
-            // создаем новый поток\
-            // Открываем диалоговое окно выбора папки
-            var dialog = new System.Windows.Forms.FolderBrowserDialog();
-            System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+        #region RightButton
+        /// <summary>
+        /// Редактировать 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
 
-            // Получаем Выбранную папку
-            string rootFolder = dialog.SelectedPath;
-            myThread = new Thread(new ParameterizedThreadStart(OpenPath));
-            myThread.Start(rootFolder); // запускаем поток
-        } // Button_OpenMusic_Path_Click
+        } // MenuItem_Click EDIT
 
+        /// <summary>
+        /// Удалить песню навсегда
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        {
+            play = (Music)(((System.Windows.Controls.DataGrid)sender).SelectedItem);
+            if (play != null)
+                Music_Editing.DeletMusic(play.full_name);
+        } // MenuItem_Click_1 DELETE
+
+        /// <summary>
+        /// Перейти к папке с песней
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MenuItem_Click_2(object sender, RoutedEventArgs e)
+        {
+
+        } // MenuItem_Click_2 GO TO FOLDER
+        #endregion
+
+        /// <summary>
+        /// 
+        /// Перейти к созданию нового плейлиста
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_NewPLayList_Click(object sender, RoutedEventArgs e)
         {
             New_Album new_Album = new New_Album();
             new_Album.ShowDialog();
-        }
+        } // Button_NewPLayList_Click
+
+       
     }
 }
