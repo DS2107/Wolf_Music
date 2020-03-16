@@ -934,8 +934,9 @@
                                 <DropShadowEffect Direction="215" ShadowDepth="7" BlurRadius="10"/>
                             </DataGrid.Effect>
                             <DataGrid.Columns>
-                               
-                                <DataGridTextColumn Header="Music" Binding="{Binding  name}"  />
+
+                                <DataGridTextColumn Header="File" Binding="{Binding  name}" Width="*" />
+                                <DataGridTextColumn Header="Name" Binding="{Binding  smalName}" Width="*" />
                                 <DataGridHyperlinkColumn Header="Time" Binding="{Binding time}" Width="*" />
                                 <DataGridHyperlinkColumn Header="Album" Binding="{Binding music_album_playlist}" Width="*" />
                             </DataGrid.Columns>

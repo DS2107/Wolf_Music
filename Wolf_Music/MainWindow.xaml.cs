@@ -45,7 +45,7 @@ namespace Wolf_Music
         DispatcherTimer timerVideoTime = new DispatcherTimer();
 
         //Поток для файлов      
-        Thread myThread;
+        System.Threading.Thread myThread;
 
         #region Window
         public MainWindow(){
@@ -100,7 +100,7 @@ namespace Wolf_Music
         {
             WindowState = WindowState.Minimized;
         } // Button_Minim_Click
-
+        bool Max_Min = false;
         /// <summary>
         /// Развернуть свернуть
         /// </summary>
@@ -108,7 +108,7 @@ namespace Wolf_Music
         /// <param name="e"></param>
         private void Button_Collapse_Click(object sender, RoutedEventArgs e)
         {
-            bool Max_Min = false;
+            
             if (Max_Min == false)
             {
                 WindowState = WindowState.Maximized;
@@ -147,27 +147,40 @@ namespace Wolf_Music
         #endregion
 
         #region PLayMusic
+
         /// <summary>
         /// Открыть папку с музыкой
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Button_OpenFile_Click(object sender, RoutedEventArgs e){
-            // создаем новый поток\
-            // Открываем диалоговое окно выбора папки
-            string rootFolder ="";
-           
-                var dialog = new System.Windows.Forms.FolderBrowserDialog();
-                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
 
-                // Получаем Выбранную папку
-                rootFolder = dialog.SelectedPath;
-                 
-            myThread = new Thread(new ParameterizedThreadStart(OpenPath));
-            myThread.Start(rootFolder); // запускаем поток
-                              
+            // Переход на вкладку
+            TabMyMusic.SelectedIndex = 0;
+            TabMyMusic.SelectedItem = TabMusic;
+            TabMyMusic.SelectedItem = TabMyMusic.Items[1];
+            myThread = new Thread(new ThreadStart(Open));
+            myThread.Start();
         } // Button_OpenFile_Click
-       
+
+        private void Open()
+        {
+            /* Dispatcher.Invoke(() =>*/
+            
+           
+            play = new Music();
+            List<Music> musics = new List<Music>();
+            musics = play.OpenPathToMusic();
+            if(musics.Count != 0)
+            {
+                Dispatcher.Invoke(() => DG_TabMusic.ItemsSource = null);
+                Dispatcher.Invoke(() => DG_TabMusic.ItemsSource = musics);
+                stackMusic = musics;
+            }
+              
+              myThread.Abort();   //прерываем поток
+              myThread.Join(500); //таймаут на завершение
+        }
         /// <summary>
         /// Запуск музыки по 2 нажатию
         /// </summary>
@@ -178,25 +191,23 @@ namespace Wolf_Music
             if (play != null)
             {
                
-                        Media.Source = new Uri(play.full_name);
-                        Media.Play();
-                        TB_MUsic.Text = play.name;
-                        TB_album.Text = play.music_album_playlist;                      
+                 Media.Source = new Uri(play.full_name);
+                 Media.Play();
+                 TB_MUsic.Text = play.name;
+                 TB_album.Text = play.music_album_playlist;                      
 
             }
         } // DG_TabMusic_MouseDoubleClick
 
         private void Button_OpenMusic_Path_Click(object sender, RoutedEventArgs e)
         {
-            // создаем новый поток\
-            // Открываем диалоговое окно выбора папки
-            var dialog = new System.Windows.Forms.FolderBrowserDialog();
-            System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+            // Переход на вкладку
+            TabMyMusic.SelectedIndex = 0;
+            TabMyMusic.SelectedItem = TabMusic;
+            TabMyMusic.SelectedItem = TabMyMusic.Items[1];
+            myThread = new Thread(new ThreadStart(Open));
 
-            // Получаем Выбранную папку
-            string rootFolder = dialog.SelectedPath;
-            myThread = new Thread(new ParameterizedThreadStart(OpenPath));
-            myThread.Start(rootFolder); // запускаем поток
+
         } // Button_OpenMusic_Path_Click
 
 
@@ -222,9 +233,7 @@ namespace Wolf_Music
         {
             TotalTime = Media.NaturalDuration.TimeSpan;
             SliderPlay.Maximum = TotalTime.TotalSeconds;
-         
-          
-          
+
             timerVideoTime.Interval = TimeSpan.FromSeconds(1);
             timerVideoTime.Tick += new EventHandler(timer_Tick);
             timerVideoTime.Start();
@@ -246,20 +255,22 @@ namespace Wolf_Music
                     } // if
 
                 } //if
+
                 if (Media.Position == TotalTime)
                 {
                     for (int i = 0; i < stackMusic.Count; i++)
                     {
-                        if(stackMusic[i].full_name == play.full_name)
+
+                        if (stackMusic[i].full_name == play.full_name)
                         {
-                           
+
                             i++;
                             play.full_name = stackMusic[i].full_name;
                             Media.Source = new Uri(stackMusic[i].full_name);
                             Media.Play();
                             TB_MUsic.Text = stackMusic[i].name;
                             TB_album.Text = stackMusic[i].music_album_playlist;
-                            
+
                         }
                        
                     }
@@ -315,45 +326,6 @@ namespace Wolf_Music
 
             } // if    
         } // OpenFile
-
-        /// <summary>
-        /// Открыть папку
-        /// </summary>
-        /// <param name="rootFolder">имя папки</param>
-        private void OpenPath(object rootFolder)
-        {
-            play = new Music();
-                List<string> OpenMusic = new List<string>();
-               
-                string folder = Convert.ToString(rootFolder);
-            // Проходим по подпапкам и находим mp3 файлы
-            if (folder != "")
-            {
-                foreach (var file in Directory.EnumerateFiles(folder, "*", SearchOption.AllDirectories))
-                {
-                    // Расширение файла 
-                    string extens = System.IO.Path.GetExtension(file);
-
-                    // находим mp3 файлы
-                    if (extens == ".mp3")
-                    {
-                        // Добавляем в список найденную музыку 
-                        OpenMusic.Add(file);
-                    }
-
-                }
-                // Переходим на вкладку музыки 
-                Dispatcher.Invoke(() => TabMyMusic.SelectedIndex = 0);
-                Dispatcher.Invoke(() => TabMyMusic.SelectedItem = TabMusic);
-                Dispatcher.Invoke(() => TabMyMusic.SelectedItem = TabMyMusic.Items[1]);
-                Dispatcher.Invoke(() => DG_TabMusic.ItemsSource = null);
-                Dispatcher.Invoke(() => DG_TabMusic.ItemsSource = play.SortSeachMusic(OpenMusic));
-                Dispatcher.Invoke(() => stackMusic = play.SortSeachMusic(OpenMusic));
-                myThread.Abort();   //прерываем поток
-                myThread.Join(500); //таймаут на завершение
-            } // if
-
-        } // OpenPath
 
         #endregion
 

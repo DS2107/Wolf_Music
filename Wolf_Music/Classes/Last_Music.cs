@@ -14,14 +14,5 @@ namespace Wolf_Music.Classes
         public string music_album_playlist { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public double time { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public List<string> GetFullNameFile()
-        {
-            throw new NotImplementedException();
-        }
-
-        public string GetFullPath()
-        {
-            throw new NotImplementedException();
-        }
     } // Last_Music
 }

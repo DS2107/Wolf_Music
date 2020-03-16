@@ -28,17 +28,7 @@ namespace Wolf_Music.Interfaces
     /// </summary>
     string time { set; get; } 
     
-    /// <summary>
-    ///  Возвращает путь выбранной папки из которой будут проигрываться песни
-    /// </summary>
-    /// <returns></returns>
-    string GetFullPath(); 
-
-    /// <summary>
-    /// Возвращает путь выбранных файлов 
-    /// </summary>
-    /// <returns></returns>
-    List<string> GetFullNameFile();
+   
     
     
 
