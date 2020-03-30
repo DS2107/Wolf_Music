@@ -590,13 +590,13 @@
 
 
                 </DockPanel>
-                <DockPanel VerticalAlignment="Center" Height="29" Margin="35,23,0,-20" HorizontalAlignment="Left" Width="190" >
+                <DockPanel VerticalAlignment="Center" Height="29" Margin="35,23,0,-20" HorizontalAlignment="Left">
 
                     <TextBlock x:Name="TB_album" Margin="21,0,0,0"   FontSize="14" Foreground="#FF978E8E" HorizontalAlignment="Left" VerticalAlignment="Center"><Run Text="'Album'"/></TextBlock>
-                    <TextBlock x:Name="timemus" Text="" FontSize="14" Foreground="#FF978E8E" Height="19"  Width="105" Margin="40,0,0,0"/>
+                    <TextBlock x:Name="timemus" Text="" FontSize="14" Foreground="#FF978E8E" Height="19"  Width="82" Margin="40,5,0,5"/>
                 </DockPanel>
-                
-                
+
+
             </Grid>
         </StackPanel>
         <Grid Height="632" VerticalAlignment="Bottom">
@@ -859,7 +859,7 @@
                 <Grid Margin="-4,32,-4,-34">
                     <Button x:Name="Button_OpenMusic"  Width="132" Content="Open file" 
                         VerticalAlignment="Top" FontFamily="Segoe UI Semibold" Margin="567,-31,0,0" 
-                        Height="26" FontSize="18" Foreground="#FF212121" Background="Black" HorizontalAlignment="Left" Click="Button_OpenMusic_Click" >
+                        Height="26" FontSize="18" Foreground="#FF212121" Background="Black" HorizontalAlignment="Left" Click="Button_OpenPath_Click" >
                         <Button.Template>
                             <ControlTemplate TargetType="{x:Type Button}">
                                 <Border x:Name="buttonBorder" CornerRadius="5"
@@ -888,7 +888,7 @@
                     </Button>
                     <Button x:Name="Button_OpenMusic_Path"  Width="132" Content="Open path" 
                         VerticalAlignment="Top" FontFamily="Segoe UI Semibold" Margin="725,-31,0,0" 
-                        Height="26" FontSize="18" Foreground="#FF212121" Background="Black" HorizontalAlignment="Left" Click="Button_OpenMusic_Path_Click" >
+                        Height="26" FontSize="18" Foreground="#FF212121" Background="Black" HorizontalAlignment="Left" Click="Button_OpenFile_Click" >
                         <Button.Template>
                             <ControlTemplate TargetType="{x:Type Button}">
                                 <Border x:Name="buttonBorder" CornerRadius="5"
@@ -927,7 +927,7 @@
                                     <MenuItem Header="Edit" Click="MenuItem_Click"  />
                                     <MenuItem Header="Delete" Click="MenuItem_Click_1"  />
                                     <MenuItem Header="Go to folder" Click="MenuItem_Click_2"  />
-                                    
+
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                             <DataGrid.Effect>

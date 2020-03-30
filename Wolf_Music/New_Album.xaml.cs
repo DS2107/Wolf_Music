@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Wolf_Music.Classes;
 
 namespace Wolf_Music
 {
@@ -19,6 +21,7 @@ namespace Wolf_Music
     /// </summary>
     public partial class New_Album : Window
     {
+        Albums album;
         public New_Album()
         {
             InitializeComponent();
@@ -26,7 +29,15 @@ namespace Wolf_Music
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            this.DragMove();
+            try
+            {
+                this.DragMove();
+            }
+            catch
+            {
+
+            }
+          
         } // Window_MouseLeftButtonDown
 
         private void Button_Close_Click(object sender, RoutedEventArgs e)
@@ -37,6 +48,37 @@ namespace Wolf_Music
         private void Button_Minim_Click(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
+        }
+
+        /// <summary>
+        /// Выбор фото
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
+            openFileDialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG|All files (*.*)|*.*";
+            if (openFileDialog.ShowDialog() == true)
+            {
+
+                string filename = openFileDialog.FileName;
+             
+                ImagePlay.Source = new BitmapImage(new Uri(openFileDialog.FileName)); ;
+
+            } // if  
+        } // Image_MouseLeftButtonDown
+       
+        /// <summary>
+        ///  Создание Плейлиста
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Create_Click(object sender, RoutedEventArgs e)
+        {
+            album = new Albums();
+            album.Create(ImagePlay.Source.ToString(), TitleName.Text);
+            TitleName.Text = "";
         }
     }
 }

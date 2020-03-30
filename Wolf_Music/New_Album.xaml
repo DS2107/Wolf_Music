@@ -42,7 +42,7 @@
         </Rectangle>
         <Label Content="New PlayList" HorizontalAlignment="Left" Margin="45,10,0,0" VerticalAlignment="Top" Width="150" FontSize="16" Foreground="#FFC1B9B9" FontWeight="Bold" FontFamily="Tahoma"/>
         <Rectangle HorizontalAlignment="Left" Height="510" Margin="0,55,0,0" VerticalAlignment="Top" Width="485" Stroke="#FFAA6060" StrokeThickness="3"/>
-        <Image Source="Image\NewAlbomIco.png" HorizontalAlignment="Left" Height="150" Margin="35,110,0,0" VerticalAlignment="Top" Width="140"/>
+        <Image x:Name="ImagePlay" Source="Image\NewAlbomIco.png" HorizontalAlignment="Left" Height="150" Margin="35,110,0,0" VerticalAlignment="Top" Width="140" MouseLeftButtonDown="Image_MouseLeftButtonDown"/>
         <Button Panel.ZIndex="3" x:Name="Button_Close" Margin="0,7,10,0" Height="20" VerticalAlignment="Top" Click="Button_Close_Click" HorizontalAlignment="Right" Width="19">
             <Button.Template>
                 <ControlTemplate TargetType="Button">
@@ -75,7 +75,7 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-        <TextBox Style="{StaticResource MyTextBox}" HorizontalAlignment="Left" Height="25" Margin="224,140,0,0" TextWrapping="Wrap" Text="Title" VerticalAlignment="Top" Width="227" BorderBrush="{x:Null}" FontSize="14" Background="#FFA07373">
+        <TextBox x:Name="TitleName" Style="{StaticResource MyTextBox}" HorizontalAlignment="Left" Height="25" Margin="224,140,0,0" TextWrapping="Wrap" Text="Title" VerticalAlignment="Top" Width="227" BorderBrush="{x:Null}" FontSize="14" Background="#FFA07373">
             <TextBox.Effect>
                 <DropShadowEffect Direction="215" Color="#FF303030" BlurRadius="15"/>
             </TextBox.Effect>
@@ -94,6 +94,35 @@
                                                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                                 Content="{TemplateBinding Content}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="buttonBorder" Property="Background" Value="#FF497893" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter TargetName="buttonBorder" Property="Opacity" Value="0.6" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" Value="Gray"/>
+                            <Setter TargetName="buttonBorder" Property="Background" Value="LightGray"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <Button x:Name="Button_Create"  Width="132" Content="Create" 
+            VerticalAlignment="Top" FontFamily="Segoe UI Semibold" Margin="319,234,0,0" 
+            Height="26" FontSize="18" Foreground="#FF212121" Background="Black" HorizontalAlignment="Left" Click="Button_Create_Click" >
+            <Button.Template>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="buttonBorder" CornerRadius="5"
+                        BorderBrush="{x:Null}" Background="#FFE29539"
+                        Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"  >
+
+                        <ContentControl Margin="{TemplateBinding Padding}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Content}" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">

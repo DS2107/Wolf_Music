@@ -33,7 +33,7 @@ namespace Wolf_Music.Interfaces
         /// <param name="image">Картинка альбома</param>
         /// <param name="name">Название альбома</param>
         /// <returns></returns>
-        bool Create(string image, string name); 
+        void Create(string image, string name); 
 
         /// <summary>
         /// Удаление альбома, каждому альбому будет присваеваться уникальное имя и удаление по нему же

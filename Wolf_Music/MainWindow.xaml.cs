@@ -47,6 +47,9 @@ namespace Wolf_Music
         //Поток для файлов      
         System.Threading.Thread myThread;
 
+
+        string back;
+
         #region Window
         public MainWindow(){
 
@@ -178,8 +181,8 @@ namespace Wolf_Music
                 stackMusic = musics;
             }
               
-              myThread.Abort();   //прерываем поток
-              myThread.Join(500); //таймаут на завершение
+           //   myThread.Abort();   //прерываем поток
+             // myThread.Join(500); //таймаут на завершение
         }
         /// <summary>
         /// Запуск музыки по 2 нажатию
@@ -193,34 +196,35 @@ namespace Wolf_Music
                
                  Media.Source = new Uri(play.full_name);
                  Media.Play();
+                 back = play.full_name;
                  TB_MUsic.Text = play.name;
                  TB_album.Text = play.music_album_playlist;                      
 
             }
         } // DG_TabMusic_MouseDoubleClick
 
-        private void Button_OpenMusic_Path_Click(object sender, RoutedEventArgs e)
-        {
-            // Переход на вкладку
-            TabMyMusic.SelectedIndex = 0;
-            TabMyMusic.SelectedItem = TabMusic;
-            TabMyMusic.SelectedItem = TabMyMusic.Items[1];
-            myThread = new Thread(new ThreadStart(Open));
-
-
-        } // Button_OpenMusic_Path_Click
 
 
         private void Button_OpenPath_Click(object sender, RoutedEventArgs e)
         {
-            OpenFile();
+            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+              
+                string filename = openFileDialog.FileName;
+                FileInfo fileInf = new FileInfo(filename);
+                var audio = TagLib.File.Create(Convert.ToString(fileInf));
+                Media.Source = new Uri(fileInf.FullName);
+                TB_MUsic.Text = fileInf.Name;
+                TB_album.Text = audio.Tag.Album;
+
+                Media.Play();
+
+            } // if  
 
         } //Button_OpenPath_Click
 
-        private void Button_OpenMusic_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFile();
-        } // Button_OpenMusic_Click
+      
         #endregion
 
         #region MediaElem
@@ -256,21 +260,24 @@ namespace Wolf_Music
 
                 } //if
 
+
+
+
                 if (Media.Position == TotalTime)
                 {
                     for (int i = 0; i < stackMusic.Count; i++)
                     {
-
-                        if (stackMusic[i].full_name == play.full_name)
+                        
+                        if (stackMusic[i].full_name == back)
                         {
 
+
                             i++;
-                            play.full_name = stackMusic[i].full_name;
+                            back = stackMusic[i].full_name;                         
                             Media.Source = new Uri(stackMusic[i].full_name);
-                            Media.Play();
+                            //Media.Play();
                             TB_MUsic.Text = stackMusic[i].name;
                             TB_album.Text = stackMusic[i].music_album_playlist;
-
                         }
                        
                     }
@@ -308,27 +315,7 @@ namespace Wolf_Music
 
         #endregion
 
-        #region OPEN
-        /// <summary>
-        /// Открыть файл
-        /// </summary>
-        private void OpenFile()
-        {
-            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
-            if (openFileDialog.ShowDialog() == true)
-            {
-                string filename = openFileDialog.FileName;
-                FileInfo fileInf = new FileInfo(filename);
-                Media.Source = new Uri(fileInf.FullName);
-                TB_MUsic.Text = fileInf.Name;
-                TB_album.Text = "";
-                Media.Play();
-
-            } // if    
-        } // OpenFile
-
-        #endregion
-
+       
         #region RightButton
         /// <summary>
         /// Редактировать 
