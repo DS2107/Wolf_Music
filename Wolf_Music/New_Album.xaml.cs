@@ -21,10 +21,17 @@ namespace Wolf_Music
     /// </summary>
     public partial class New_Album : Window
     {
-        Albums album;
+        /// <summary>
+        /// связь с классом
+        /// </summary>
+        Albums album = new Albums();
+       
+
+      
         public New_Album()
         {
             InitializeComponent();
+            Button_Create.IsEnabled = false;
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -49,12 +56,13 @@ namespace Wolf_Music
         {
             WindowState = WindowState.Minimized;
         }
-
+        string name;
         /// <summary>
         /// Выбор фото
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        ///   
         private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
@@ -63,7 +71,7 @@ namespace Wolf_Music
             {
 
                 string filename = openFileDialog.FileName;
-             
+                name = openFileDialog.SafeFileName;
                 ImagePlay.Source = new BitmapImage(new Uri(openFileDialog.FileName)); ;
 
             } // if  
@@ -75,10 +83,18 @@ namespace Wolf_Music
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Button_Create_Click(object sender, RoutedEventArgs e)
-        {
-            album = new Albums();
-            album.Create(ImagePlay.Source.ToString(), TitleName.Text);
+        {        
+            album.Create(ImagePlay.Source.ToString(), TitleName.Text,name);
             TitleName.Text = "";
+            Button_Create.IsEnabled = false;
+        }
+
+        private void Button_Choose_Click(object sender, RoutedEventArgs e)
+        {
+            if (album.searchMusic())
+                Button_Create.IsEnabled = true;
+            else
+                Button_Create.IsEnabled = false;
         }
     }
 }

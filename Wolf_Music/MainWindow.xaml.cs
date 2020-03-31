@@ -20,6 +20,7 @@ namespace Wolf_Music
 
     public partial class MainWindow : Window
     {
+        Albums albums = new Albums();
         /// <summary>
         /// Правая кнопка мышки по музыке 
         /// </summary>
@@ -39,10 +40,14 @@ namespace Wolf_Music
         /// </summary>
         List<Music> stackMusic = new List<Music>();
 
+
+        List<Music> stackMusicInPLayList = new List<Music>();
         /// <summary>
         /// Таймер для слайдера
         /// </summary>
         DispatcherTimer timerVideoTime = new DispatcherTimer();
+        DispatcherTimer timerVideoTime2 = new DispatcherTimer();
+
 
         //Поток для файлов      
         System.Threading.Thread myThread;
@@ -54,6 +59,11 @@ namespace Wolf_Music
         public MainWindow(){
 
             InitializeComponent();
+
+
+
+            DG_TabPlayLists.ItemsSource =  albums.Loading();
+
             SliderPlay.AddHandler(MouseLeftButtonUpEvent,
                       new MouseButtonEventHandler(timeSlider_MouseLeftButtonUp),
                       true);
@@ -135,6 +145,7 @@ namespace Wolf_Music
         private void timeSlider_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             timerVideoTime.Stop();
+            timerVideoTime2.Stop();
         } // timeSlider_MouseLeftButtonDown
 
         /// <summary>
@@ -146,6 +157,7 @@ namespace Wolf_Music
         {
             Media.Position = TimeSpan.FromSeconds(SliderPlay.Value);
             timerVideoTime.Start();
+            timerVideoTime2.Start();
         } // timeSlider_MouseLeftButtonUp
         #endregion
 
@@ -190,7 +202,8 @@ namespace Wolf_Music
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void DG_TabMusic_MouseDoubleClick(object sender, MouseButtonEventArgs e){
-            play = (Music)(((System.Windows.Controls.DataGrid)sender).SelectedItem);
+            
+           play = (Music)(((System.Windows.Controls.DataGrid)sender).SelectedItem);
             if (play != null)
             {
                
@@ -235,14 +248,72 @@ namespace Wolf_Music
         /// <param name="e"></param>
         private void Media_MediaOpened(object sender, RoutedEventArgs e)
         {
-            TotalTime = Media.NaturalDuration.TimeSpan;
-            SliderPlay.Maximum = TotalTime.TotalSeconds;
+            if (TabMyMusic.SelectedItem == TabMusic)
+            {
+                timerVideoTime2.Stop();
+                TotalTime = Media.NaturalDuration.TimeSpan;
+                SliderPlay.Maximum = TotalTime.TotalSeconds;
 
-            timerVideoTime.Interval = TimeSpan.FromSeconds(1);
-            timerVideoTime.Tick += new EventHandler(timer_Tick);
-            timerVideoTime.Start();
-          
+                timerVideoTime.Interval = TimeSpan.FromSeconds(1);
+                timerVideoTime.Tick += new EventHandler(timer_Tick);
+                timerVideoTime.Start();
+            }
+            else if (TabMyMusic.SelectedItem == PlayListTB)
+            {
+                timerVideoTime.Stop();
+                TotalTime = Media.NaturalDuration.TimeSpan;
+                SliderPlay.Maximum = TotalTime.TotalSeconds;
+
+                timerVideoTime2.Interval = TimeSpan.FromSeconds(1);
+                timerVideoTime2.Tick += new EventHandler(timer_Tick2);
+                timerVideoTime2.Start();
+            }
         } // Media_MediaOpened
+
+        private void timer_Tick2(object sender, EventArgs e)
+        {
+            try
+            {
+                // Check if the movie finished calculate it's total time
+                if (Media.NaturalDuration.TimeSpan.TotalSeconds > 0)
+                {
+                    if (TotalTime.TotalSeconds > 0)
+                    {
+                        // Updating time slider
+                        SliderPlay.Value = Media.Position.TotalSeconds;
+                        timemus.Text = Media.Position.ToString("mm\\:ss");
+                    } // if
+
+                } //if
+
+
+
+
+                if (Media.Position == TotalTime)
+                {
+                    for (int i = 0; i < stackMusicInPLayList.Count; i++)
+                    {
+
+                        if (stackMusicInPLayList[i].full_name == back)
+                        {
+                            i++;
+                            back = stackMusicInPLayList[i].full_name;
+                            Media.Source = new Uri(stackMusicInPLayList[i].full_name);
+                            //Media.Play();
+                            TB_MUsic.Text = stackMusicInPLayList[i].name;
+                            TB_album.Text = stackMusicInPLayList[i].music_album_playlist;
+                        }
+
+
+                    }
+
+                }
+            }
+            catch
+            {
+
+            }
+        }
 
         private void timer_Tick(object sender, EventArgs e)
         {
@@ -270,8 +341,6 @@ namespace Wolf_Music
                         
                         if (stackMusic[i].full_name == back)
                         {
-
-
                             i++;
                             back = stackMusic[i].full_name;                         
                             Media.Source = new Uri(stackMusic[i].full_name);
@@ -279,7 +348,8 @@ namespace Wolf_Music
                             TB_MUsic.Text = stackMusic[i].name;
                             TB_album.Text = stackMusic[i].music_album_playlist;
                         }
-                       
+                      
+
                     }
                   
                 }
@@ -360,8 +430,21 @@ namespace Wolf_Music
         {
             New_Album new_Album = new New_Album();
             new_Album.ShowDialog();
+            DG_TabPlayLists.ItemsSource = null;
+            DG_TabPlayLists.ItemsSource = albums.Loading(); 
         } // Button_NewPLayList_Click
 
        
+
+        private void DG_TabPlayLists_MouseLeftButtonDown_1(object sender, MouseButtonEventArgs e)
+        {
+            albums = (Albums)(((System.Windows.Controls.DataGrid)sender).SelectedItem);
+            if (albums != null)
+            {
+                DG_TabPlayList.ItemsSource = null;
+                DG_TabPlayList.ItemsSource = albums.MyMusicInPlayList;
+                stackMusicInPLayList = albums.MyMusicInPlayList;
+            }
+        }
     }
 }

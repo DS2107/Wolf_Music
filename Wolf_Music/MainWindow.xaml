@@ -945,11 +945,11 @@
                     <TextBox Style="{StaticResource MyTextBox}" HorizontalAlignment="Left" Height="25" Margin="10,13,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Top" Width="517" BorderBrush="{x:Null}" FontSize="14"/>
                 </Grid>
             </TabItem>
-            <TabItem Style="{DynamicResource TabItemStyle1}" Header="Playlist" Margin="157,31,-157,-31">
+            <TabItem x:Name="PlayListTB" Style="{DynamicResource TabItemStyle1}" Header="Playlist" Margin="157,31,-157,-31">
                 <Grid Margin="-4,32,-4,-34">
                     <Button x:Name="Button_TIP_NewPlayList"  Width="132" Content="New PlayList" 
                         VerticalAlignment="Top" FontFamily="Segoe UI Semibold" Margin="567,-31,0,0" 
-                        Height="26" FontSize="18" Foreground="#FF212121" Background="Black" HorizontalAlignment="Left" >
+                        Height="26" FontSize="18" Foreground="#FF212121" Background="Black" HorizontalAlignment="Left" Click="Button_NewPLayList_Click" >
                         <Button.Template>
                             <ControlTemplate TargetType="{x:Type Button}">
                                 <Border x:Name="buttonBorder" CornerRadius="5"
@@ -982,27 +982,35 @@
                     <Grid Margin="0,58,0,0">
 
 
-                        <DataGrid HeadersVisibility="Column" CanUserAddRows="false"  HorizontalGridLinesBrush="{x:Null}"  VerticalGridLinesBrush="{x:Null}" AutoGenerateColumns="False" x:Name="DG_TabPlayList" BorderBrush="{x:Null}" Background="{x:Null}" Margin="458,0,10,73" FontSize="16">
+                        <DataGrid HeadersVisibility="Column" CanUserAddRows="false"  HorizontalGridLinesBrush="{x:Null}"  VerticalGridLinesBrush="{x:Null}" AutoGenerateColumns="False" x:Name="DG_TabPlayList" BorderBrush="{x:Null}" Background="{x:Null}" Margin="458,0,10,73" FontSize="16" MouseDoubleClick="DG_TabMusic_MouseDoubleClick">
 
                             <DataGrid.Effect>
                                 <DropShadowEffect Direction="215" ShadowDepth="3" BlurRadius="10"/>
                             </DataGrid.Effect>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Music" Binding="{Binding Path=Title}" Width="240" />
-                                <DataGridHyperlinkColumn Header="Time" Binding="{Binding Path=Company}" Width="*" />
 
+                                <DataGridTextColumn Header="File" Binding="{Binding  name}" Width="*" />
+                                <DataGridTextColumn Header="Name" Binding="{Binding  smalName}" Width="*" />
+                                <DataGridHyperlinkColumn Header="Time" Binding="{Binding time}" Width="*" />
+                                <DataGridHyperlinkColumn Header="Album" Binding="{Binding music_album_playlist}" Width="*" />
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
                     <Grid Margin="0,58,785,61" >
-                        <DataGrid HeadersVisibility="Column" CanUserAddRows="false"  HorizontalGridLinesBrush="{x:Null}"  VerticalGridLinesBrush="{x:Null}" AutoGenerateColumns="False" x:Name="DG_TabPlayLists" BorderBrush="{x:Null}" Background="{x:Null}" FontSize="16" HorizontalAlignment="Left" Width="455">
+                        <DataGrid  HeadersVisibility="Column" CanUserAddRows="false"  HorizontalGridLinesBrush="{x:Null}"  VerticalGridLinesBrush="{x:Null}" AutoGenerateColumns="False" x:Name="DG_TabPlayLists" BorderBrush="{x:Null}" Background="{x:Null}" FontSize="16" HorizontalAlignment="Left" Width="455" MouseLeftButtonDown="DG_TabPlayLists_MouseLeftButtonDown_1">
 
                             <DataGrid.Effect>
                                 <DropShadowEffect Direction="215" ShadowDepth="7" BlurRadius="10"/>
                             </DataGrid.Effect>
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="PlayList" Binding="{Binding Path=Title}" Width="240" />
-                                <DataGridHyperlinkColumn Header="Songs" Binding="{Binding Path=Company}" Width="*" />
+                            <DataGrid.Columns >
+                                <DataGridTemplateColumn Header="Foto"   Width="*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image  Margin="20,0,20,50" Source="{Binding Image}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridHyperlinkColumn Header="Songs" Binding="{Binding Path=name}" Width="*" />
 
                             </DataGrid.Columns>
                         </DataGrid>

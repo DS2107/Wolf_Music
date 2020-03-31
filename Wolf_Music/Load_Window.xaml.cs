@@ -23,6 +23,7 @@ namespace Wolf_Music
         System.Windows.Threading.DispatcherTimer timer;
         public Load_Window(){
         InitializeComponent();
+
         timer = new System.Windows.Threading.DispatcherTimer();
         timer.Tick += new EventHandler(timer_Tick);
         timer.Interval = new TimeSpan(0, 0, 4); 

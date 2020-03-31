@@ -7,6 +7,7 @@ using Wolf_Music.Interfaces;
 using TagLib;
 using System.Media;
 using System.Threading;
+using System.Windows.Controls;
 
 namespace Wolf_Music.Classes
 {
@@ -116,7 +117,9 @@ namespace Wolf_Music.Classes
             return musics;
         } // SortMusic
 
-        
-       
+        public static explicit operator Music(ItemCollection v)
+        {
+            throw new NotImplementedException();
+        }
     } // Music
 }

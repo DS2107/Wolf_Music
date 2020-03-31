@@ -83,7 +83,7 @@
         <Label Content="Image PlayList" HorizontalAlignment="Left" Margin="35,76,0,0" VerticalAlignment="Top" Width="150" FontSize="16" Foreground="#FFC1B9B9" FontWeight="Bold" FontFamily="Tahoma"/>
         <Button x:Name="Button_Choose"  Width="132" Content="Choose music" 
                         VerticalAlignment="Top" FontFamily="Segoe UI Semibold" Margin="319,189,0,0" 
-                        Height="26" FontSize="18" Foreground="#FF212121" Background="Black" HorizontalAlignment="Left" >
+                        Height="26" FontSize="18" Foreground="#FF212121" Background="Black" HorizontalAlignment="Left" Click="Button_Choose_Click" >
             <Button.Template>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border x:Name="buttonBorder" CornerRadius="5"
