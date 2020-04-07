@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Wolf_Music.Classes;
 
 namespace Wolf_Music.Interfaces
 {
@@ -40,7 +41,7 @@ namespace Wolf_Music.Interfaces
         /// </summary>
         /// <param name="name">Имя альбома</param>
         /// <returns></returns>
-        bool Delete(string name);
+        bool Delete(List<Albums> name);
 
         /// <summary>
         ///  Реактирование альбома

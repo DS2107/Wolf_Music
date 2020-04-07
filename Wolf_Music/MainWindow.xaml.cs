@@ -12,6 +12,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using VkNet;
+using VkNet.Enums.Filters;
+using VkNet.Model;
+using VkNet.Model.RequestParams;
 using Wolf_Music.Classes;
 
 
@@ -20,6 +24,9 @@ namespace Wolf_Music
 
     public partial class MainWindow : Window
     {
+
+        public static MainWindow Instance { get; private set; } // тут будет форма
+
         Albums albums = new Albums();
         /// <summary>
         /// Правая кнопка мышки по музыке 
@@ -33,7 +40,7 @@ namespace Wolf_Music
         /// <summary>
         /// Указывает время для слайдера
         /// </summary>
-        private TimeSpan TotalTime;
+        public TimeSpan TotalTime;
 
         /// <summary>
         /// Список найденной музыки
@@ -41,28 +48,29 @@ namespace Wolf_Music
         List<Music> stackMusic = new List<Music>();
 
 
-        List<Music> stackMusicInPLayList = new List<Music>();
+        List<Albums> stackAlbum = new List<Albums>();
+
+        List<Music> LastMusic = new List<Music>();
         /// <summary>
         /// Таймер для слайдера
         /// </summary>
         DispatcherTimer timerVideoTime = new DispatcherTimer();
-        DispatcherTimer timerVideoTime2 = new DispatcherTimer();
+       
 
 
         //Поток для файлов      
         System.Threading.Thread myThread;
 
-
-        string back;
-
         #region Window
         public MainWindow(){
 
             InitializeComponent();
-
-
-
-            DG_TabPlayLists.ItemsSource =  albums.Loading();
+            Instance = this;
+           
+            
+            myThread = new Thread(new ThreadStart(loadAlb));
+            myThread.Start();
+         
 
             SliderPlay.AddHandler(MouseLeftButtonUpEvent,
                       new MouseButtonEventHandler(timeSlider_MouseLeftButtonUp),
@@ -73,7 +81,11 @@ namespace Wolf_Music
                       true);
 
         }
-
+        void loadAlb()
+        {
+            stackAlbum = albums.Loading();
+            Dispatcher.Invoke(() => DG_TabPlayLists.ItemsSource = stackAlbum);
+        }
         /// <summary>
         /// Закртыь окно
         /// </summary>
@@ -145,7 +157,7 @@ namespace Wolf_Music
         private void timeSlider_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             timerVideoTime.Stop();
-            timerVideoTime2.Stop();
+           
         } // timeSlider_MouseLeftButtonDown
 
         /// <summary>
@@ -157,7 +169,7 @@ namespace Wolf_Music
         {
             Media.Position = TimeSpan.FromSeconds(SliderPlay.Value);
             timerVideoTime.Start();
-            timerVideoTime2.Start();
+        
         } // timeSlider_MouseLeftButtonUp
         #endregion
 
@@ -193,48 +205,48 @@ namespace Wolf_Music
                 stackMusic = musics;
             }
               
-           //   myThread.Abort();   //прерываем поток
-             // myThread.Join(500); //таймаут на завершение
+         
         }
         /// <summary>
         /// Запуск музыки по 2 нажатию
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        
         private void DG_TabMusic_MouseDoubleClick(object sender, MouseButtonEventArgs e){
-            
+           ItemCollection MusicItem = null;
+          
            play = (Music)(((System.Windows.Controls.DataGrid)sender).SelectedItem);
+
+           if(TabMyMusic.SelectedItem == PlayListTB)
+            {
+                MusicItem = DG_TabPlayList.Items;
+            }
+               
+          
+           
+           if (TabMyMusic.SelectedItem == TabMusic)
+            {
+                MusicItem = DG_TabMusic.Items;
+            }
+                
+
             if (play != null)
             {
-               
-                 Media.Source = new Uri(play.full_name);
-                 Media.Play();
-                 back = play.full_name;
-                 TB_MUsic.Text = play.name;
-                 TB_album.Text = play.music_album_playlist;                      
-
-            }
-        } // DG_TabMusic_MouseDoubleClick
-
-
-
-        private void Button_OpenPath_Click(object sender, RoutedEventArgs e)
-        {
-            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
-            if (openFileDialog.ShowDialog() == true)
-            {
-              
-                string filename = openFileDialog.FileName;
-                FileInfo fileInf = new FileInfo(filename);
-                var audio = TagLib.File.Create(Convert.ToString(fileInf));
-                Media.Source = new Uri(fileInf.FullName);
+                FileInfo fileInf = new FileInfo(play.full_name);
+                var audio = TagLib.File.Create(Convert.ToString(fileInf));               
                 TB_MUsic.Text = fileInf.Name;
                 TB_album.Text = audio.Tag.Album;
 
-                Media.Play();
+                play.PlayMus(play.full_name, MusicItem,play);
+            } // if
+                            
 
-            } // if  
+        } // DG_TabMusic_MouseDoubleClick
 
+        private void Button_OpenPath_Click(object sender, RoutedEventArgs e)
+        {
+            play.OpenFile();
         } //Button_OpenPath_Click
 
       
@@ -248,118 +260,17 @@ namespace Wolf_Music
         /// <param name="e"></param>
         private void Media_MediaOpened(object sender, RoutedEventArgs e)
         {
-            if (TabMyMusic.SelectedItem == TabMusic)
-            {
-                timerVideoTime2.Stop();
+
+            
+
                 TotalTime = Media.NaturalDuration.TimeSpan;
                 SliderPlay.Maximum = TotalTime.TotalSeconds;
 
                 timerVideoTime.Interval = TimeSpan.FromSeconds(1);
-                timerVideoTime.Tick += new EventHandler(timer_Tick);
+                timerVideoTime.Tick += new EventHandler(play.timer_Tick);
                 timerVideoTime.Start();
-            }
-            else if (TabMyMusic.SelectedItem == PlayListTB)
-            {
-                timerVideoTime.Stop();
-                TotalTime = Media.NaturalDuration.TimeSpan;
-                SliderPlay.Maximum = TotalTime.TotalSeconds;
-
-                timerVideoTime2.Interval = TimeSpan.FromSeconds(1);
-                timerVideoTime2.Tick += new EventHandler(timer_Tick2);
-                timerVideoTime2.Start();
-            }
+     
         } // Media_MediaOpened
-
-        private void timer_Tick2(object sender, EventArgs e)
-        {
-            try
-            {
-                // Check if the movie finished calculate it's total time
-                if (Media.NaturalDuration.TimeSpan.TotalSeconds > 0)
-                {
-                    if (TotalTime.TotalSeconds > 0)
-                    {
-                        // Updating time slider
-                        SliderPlay.Value = Media.Position.TotalSeconds;
-                        timemus.Text = Media.Position.ToString("mm\\:ss");
-                    } // if
-
-                } //if
-
-
-
-
-                if (Media.Position == TotalTime)
-                {
-                    for (int i = 0; i < stackMusicInPLayList.Count; i++)
-                    {
-
-                        if (stackMusicInPLayList[i].full_name == back)
-                        {
-                            i++;
-                            back = stackMusicInPLayList[i].full_name;
-                            Media.Source = new Uri(stackMusicInPLayList[i].full_name);
-                            //Media.Play();
-                            TB_MUsic.Text = stackMusicInPLayList[i].name;
-                            TB_album.Text = stackMusicInPLayList[i].music_album_playlist;
-                        }
-
-
-                    }
-
-                }
-            }
-            catch
-            {
-
-            }
-        }
-
-        private void timer_Tick(object sender, EventArgs e)
-        {
-            try
-            {
-                // Check if the movie finished calculate it's total time
-                if (Media.NaturalDuration.TimeSpan.TotalSeconds > 0)
-                {
-                    if (TotalTime.TotalSeconds > 0)
-                    {
-                        // Updating time slider
-                        SliderPlay.Value = Media.Position.TotalSeconds;
-                        timemus.Text = Media.Position.ToString("mm\\:ss");
-                    } // if
-
-                } //if
-
-
-
-
-                if (Media.Position == TotalTime)
-                {
-                    for (int i = 0; i < stackMusic.Count; i++)
-                    {
-                        
-                        if (stackMusic[i].full_name == back)
-                        {
-                            i++;
-                            back = stackMusic[i].full_name;                         
-                            Media.Source = new Uri(stackMusic[i].full_name);
-                            //Media.Play();
-                            TB_MUsic.Text = stackMusic[i].name;
-                            TB_album.Text = stackMusic[i].music_album_playlist;
-                        }
-                      
-
-                    }
-                  
-                }
-            }
-            catch
-            {
-
-            }
-        } //timer_Tick
-
         
         private void Button_pause_Click(object sender, RoutedEventArgs e){
             Media.Pause();
@@ -431,7 +342,8 @@ namespace Wolf_Music
             New_Album new_Album = new New_Album();
             new_Album.ShowDialog();
             DG_TabPlayLists.ItemsSource = null;
-            DG_TabPlayLists.ItemsSource = albums.Loading(); 
+            stackAlbum = albums.Loading();
+            DG_TabPlayLists.ItemsSource = stackAlbum;
         } // Button_NewPLayList_Click
 
        
@@ -443,8 +355,74 @@ namespace Wolf_Music
             {
                 DG_TabPlayList.ItemsSource = null;
                 DG_TabPlayList.ItemsSource = albums.MyMusicInPlayList;
-                stackMusicInPLayList = albums.MyMusicInPlayList;
+                LB_Album.Content = albums.name;
             }
+        }
+        //ItemsControl.ItemsSource
+        List<Albums> a1;
+        private void Button_Del_Click(object sender, RoutedEventArgs e)
+        {
+            albums = new Albums();
+           a1 = new List<Albums>();
+            var selcted = DG_TabPlayLists.SelectedItems;
+            if (selcted != null)
+            {
+                foreach (var collect in selcted)
+                {
+                    a1.Add(albums = (Albums)collect);            
+                }
+                foreach (var collect in selcted)
+                {
+                    albums = (Albums)collect;
+                    foreach(var stack in stackAlbum)
+                    {
+                        if (albums.FullName == stack.FullName)
+                            stackAlbum.Remove(stack);
+                        break;
+                    }
+                }
+                
+                DG_TabPlayLists.ItemsSource = null;
+               
+                DG_TabPlayLists.ItemsSource = stackAlbum;
+                // создаем новый поток
+                Thread myThread = new Thread(new ThreadStart(delete));
+                myThread.Start(); // запускаем поток
+               
+
+            }
+        }
+
+        private void delete()
+        {
+            if (albums.Delete(a1))
+            {
+                Dispatcher.Invoke(() => DG_TabPlayLists.ItemsSource = null);
+                Dispatcher.Invoke(() => DG_TabPlayLists.ItemsSource = albums.Loading());
+            }
+        }
+
+        private void Button_help_Click(object sender, RoutedEventArgs e)
+        {
+            var api = new VkApi();
+            api.Authorize(new ApiAuthParams
+            {
+                ApplicationId = 123456,
+                Login = "380993807883",
+                Password = "09mosila",
+                Settings = Settings.All
+            });
+            Console.WriteLine(api.Token);
+            var res = api.Groups.Get(new GroupsGetParams());
+
+            Console.WriteLine(res.TotalCount);
+            User user = new User();
+            AudioGetParams s = new AudioGetParams();
+            s.OwnerId = api.UserId;
+            s.Count = 6000;
+            
+            var audios = api.Audio.Get(s);
+           
         }
     }
 }

@@ -1,16 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using Wolf_Music.Interfaces;
+using static System.Net.Mime.MediaTypeNames;
+
 namespace Wolf_Music.Classes
 {
     class Albums : SearchClass, IAlbums
     {
         string __Image;
         string __name;
+        string __FullName;
         List<Music> __MyMusicInPlayList;
         public string name {
             get { return __name; }
@@ -26,6 +31,12 @@ namespace Wolf_Music.Classes
         public string Image {
             get { return __Image; }
             set { __Image = value; }
+        }
+
+        public string FullName
+        {
+            get { return __FullName; }
+            set { __FullName = value; }
         }
         public double time { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
@@ -61,16 +72,26 @@ namespace Wolf_Music.Classes
                         dirInfo.Create();
                         string fullName = nameParth + @"\" + name + ".txt";
                         FileStream fs = File.Create(fullName, 1024);
+                        
                         fs.Close();
 
+                        FileStream fs4 = File.Create(nameParth + @"\" + "Foto" +".txt", 1024);
+
+                        fs4.Close();
                         string localPath = new Uri(image).LocalPath;
-                        File.Copy(localPath, nameParth+@"\"+imageName);
+                     //   File.Copy(localPath, nameParth+@"\"+imageName,true);
                         using (StreamWriter sw = new StreamWriter(fullName, false, System.Text.Encoding.Default))
                         {
                             foreach(var v in music)
                             {
                                 sw.WriteLine(v);
                             }     
+                        }
+                        using (StreamWriter sw = new StreamWriter(nameParth + @"\" + "Foto" + ".txt", false, System.Text.Encoding.Default))
+                        {
+                           
+                                sw.WriteLine(image);
+                            
                         }
                     }
 
@@ -101,13 +122,22 @@ namespace Wolf_Music.Classes
                     string fullName = nameParth + @"\" + name + ".txt";
                     FileStream fs2 = File.Create(fullName, 1024);
                     fs2.Close();
-                    File.Copy(image, fullName);
+                    FileStream fs3 = File.Create(nameParth + @"\" + "Foto" + ".txt", 1024);
+
+                    fs3.Close();
+                    // File.Copy(image, fullName);
                     using (StreamWriter sw = new StreamWriter(fullName, false, System.Text.Encoding.Default))
                     {
                         foreach (var v in music)
                         {
                             sw.WriteLine(v);
                         }
+                    }
+                    using (StreamWriter sw = new StreamWriter(nameParth + @"\" + "Foto" + ".txt", false, System.Text.Encoding.Default))
+                    {
+
+                        sw.WriteLine(image);
+
                     }
                 }
             }
@@ -158,10 +188,22 @@ namespace Wolf_Music.Classes
             {
               
                 string[] filePLayList = Directory.GetFiles(path);
+                FullName = path;
                 foreach(var file in filePLayList)
                 {
-                   
-                    if (Path.GetExtension(file) == ".txt")
+                    FileInfo m1 = new FileInfo(file);
+                 
+                    if (m1.Name == "Foto.txt")
+                    {
+                        using (StreamReader sr = new StreamReader(file, System.Text.Encoding.Default))
+                        {
+                           string line2 = sr.ReadLine();
+                            Image = line2;
+                            sr.Close();
+                        }
+                       
+                    }
+                    else if (m1.Name != "Foto.txt")
                     {
                         musics = new List<Music>();
                         name = Path.GetFileName(file);
@@ -169,12 +211,12 @@ namespace Wolf_Music.Classes
                         using (StreamReader sr = new StreamReader(file, System.Text.Encoding.Default))
                         {
                             string pathmusic;
-                         
+
                             while ((pathmusic = sr.ReadLine()) != null)
                             {
                                 FileInfo fileInf = new FileInfo(pathmusic);
                                 var audio = TagLib.File.Create(Convert.ToString(fileInf));
-                             
+
 
                                 Music music = new Music
                                 {
@@ -188,21 +230,14 @@ namespace Wolf_Music.Classes
                             }
                         }
                     }
-                    else
-                    {
-                        if (Path.GetExtension(file) != ".txt")
-                        {
-                            Image = file;
-
-                        }
-                    }
                 }
                
                 Albums albums = new Albums
                 {
                     Image = Image,
                     name = name,
-                    MyMusicInPlayList = musics
+                    MyMusicInPlayList = musics,
+                    FullName = FullName
                 };
                
                 firstAlbum.Add(albums);
@@ -210,9 +245,18 @@ namespace Wolf_Music.Classes
             return firstAlbum;
         }
 
-        public bool Delete(string name)
+        public bool Delete(List<Albums> name)
         {
-            throw new NotImplementedException();
+            System.Threading.Thread.Sleep(5000);
+            foreach (var collect in name)
+            {
+               // FileStream fs = new FileStream(collect.Image, FileMode.Open);
+               // fs.Close();
+              
+                Directory.Delete(collect.FullName,true);
+                // albums.FullName
+            }
+            return true;
         }
 
         public bool Edit(string name)
