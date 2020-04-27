@@ -28,10 +28,7 @@ namespace Wolf_Music
         public static MainWindow Instance { get; private set; } // тут будет форма
 
         Albums albums = new Albums();
-        /// <summary>
-        /// Правая кнопка мышки по музыке 
-        /// </summary>
-        Music_Editing Music_Editing;
+       
         /// <summary>
         /// Объект класса Music для доступа к методам
         /// </summary>
@@ -307,39 +304,7 @@ namespace Wolf_Music
         #endregion
 
        
-        #region RightButton
-        /// <summary>
-        /// Редактировать 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-
-        } // MenuItem_Click EDIT
-
-        /// <summary>
-        /// Удалить песню навсегда
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
-        {
-            play = (Music)(((System.Windows.Controls.DataGrid)sender).SelectedItem);
-            if (play != null)
-                Music_Editing.DeletMusic(play.full_name);
-        } // MenuItem_Click_1 DELETE
-
-        /// <summary>
-        /// Перейти к папке с песней
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MenuItem_Click_2(object sender, RoutedEventArgs e)
-        {
-
-        } // MenuItem_Click_2 GO TO FOLDER
-        #endregion
+       
 
         /// <summary>
         /// 
@@ -477,6 +442,21 @@ namespace Wolf_Music
             }
         }
 
-       
+        private void DG_TabMusic_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            play = (Music)(((System.Windows.Controls.DataGrid)sender).SelectedItem);
+            if(play != null)
+            {
+                RedactWin redact = new RedactWin(play.name, play.smalName, play.music_album_playlist, play.full_name);
+                redact.ShowDialog();
+            }
+           
+        } // DG_TabMusic_MouseRightButtonDown
+
+        private void Button_Search_Click(object sender, RoutedEventArgs e)
+        {
+            SearchClass search = new SearchClass(TB_TextSearch.Text);
+            DG_TabMusic.ItemsSource =  search.Search(DG_TabMusic.Items);
+        }
     }
 }

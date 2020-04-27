@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using Wolf_Music.Classes;
 
 namespace Wolf_Music.Interfaces
 {
@@ -13,9 +15,8 @@ namespace Wolf_Music.Interfaces
         /// </summary>
         string searchName { get; set; }
 
-        // То что нашли
-        string NameSearch();
 
-
+        //List<Music> Search(ItemCollection musics);
+        List<Music> Search(ItemCollection musics);
     }
 }

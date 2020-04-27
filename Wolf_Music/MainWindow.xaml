@@ -823,40 +823,6 @@
                                 </Button>
 
                             </DockPanel>
-
-                            <DockPanel Margin="0,20,0,0" VerticalAlignment="Center" HorizontalAlignment="Right" Width="253" Height="43">
-                                <Image Source="Image\Help1.png" Margin="22,8,0,10" Width="33"/>
-                                <Button x:Name="Button_help"  Width="132" Content="Help" 
-                        VerticalAlignment="Center" FontFamily="Segoe UI Semibold" Margin="-40,5,12,7" 
-                        Height="26" FontSize="18" Foreground="#FFFFFBFB" Click="Button_help_Click" >
-                                    <Button.Template>
-                                        <ControlTemplate TargetType="{x:Type Button}">
-                                            <Border x:Name="buttonBorder" CornerRadius="10"
-                                    BorderBrush="#FFBB2727" Background="{x:Null}"
-                                    Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"  >
-
-                                                <ContentControl Margin="{TemplateBinding Padding}"
-                                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                Content="{TemplateBinding Content}" />
-                                            </Border>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="true">
-                                                    <Setter TargetName="buttonBorder" Property="Background" Value="#FF497893" />
-                                                </Trigger>
-                                                <Trigger Property="IsPressed" Value="true">
-                                                    <Setter TargetName="buttonBorder" Property="Opacity" Value="0.6" />
-                                                </Trigger>
-                                                <Trigger Property="IsEnabled" Value="false">
-                                                    <Setter Property="Foreground" Value="Gray"/>
-                                                    <Setter TargetName="buttonBorder" Property="Background" Value="LightGray"/>
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                </Button>
-
-                            </DockPanel>
                             <DockPanel Margin="0,20,0,0" VerticalAlignment="Center" HorizontalAlignment="Right" Width="253" Height="43">
                                 <Image Source="Image\Close.png" Margin="22,8,0,10" Width="33"/>
                                 <Button x:Name="Button_Close2"  Width="132" Content="Exit" 
@@ -894,14 +860,7 @@
                     </Grid>
                     <Grid  Margin="540,153,0,200" HorizontalAlignment="Left" Width="321" />
                     <DataGrid  HeadersVisibility="Column" CanUserAddRows="false"  HorizontalGridLinesBrush="{x:Null}"  VerticalGridLinesBrush="{x:Null}" AutoGenerateColumns="False"  x:Name="DG_TabLastMusic" BorderBrush="{x:Null}" Background="{x:Null}" Margin="210,64,10,73" FontSize="16" MouseDoubleClick="DG_TabMusic_MouseDoubleClick">
-                        <DataGrid.ContextMenu>
-                            <ContextMenu ItemsSource="{Binding SelectedItem, Mode=TwoWay}">
-                                <MenuItem Header="Edit" Click="MenuItem_Click"  />
-                                <MenuItem Header="Delete" Click="MenuItem_Click_1"  />
-                                <MenuItem Header="Go to folder" Click="MenuItem_Click_2"  />
-
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
+                       
                         <DataGrid.Effect>
                             <DropShadowEffect Direction="215" ShadowDepth="7" BlurRadius="10"/>
                         </DataGrid.Effect>
@@ -985,15 +944,8 @@
                     <Grid Margin="0,58,0,0">
 
 
-                        <DataGrid  HeadersVisibility="Column" CanUserAddRows="false"  HorizontalGridLinesBrush="{x:Null}"  VerticalGridLinesBrush="{x:Null}" AutoGenerateColumns="False"  x:Name="DG_TabMusic" BorderBrush="{x:Null}" Background="{x:Null}" Margin="10,0,10,73" FontSize="16" MouseDoubleClick="DG_TabMusic_MouseDoubleClick">
-                            <DataGrid.ContextMenu>
-                                <ContextMenu ItemsSource="{Binding SelectedItem, Mode=TwoWay}">
-                                    <MenuItem Header="Edit" Click="MenuItem_Click"  />
-                                    <MenuItem Header="Delete" Click="MenuItem_Click_1"  />
-                                    <MenuItem Header="Go to folder" Click="MenuItem_Click_2"  />
-
-                                </ContextMenu>
-                            </DataGrid.ContextMenu>
+                        <DataGrid  HeadersVisibility="Column" CanUserAddRows="false"  HorizontalGridLinesBrush="{x:Null}"  VerticalGridLinesBrush="{x:Null}" AutoGenerateColumns="False"  x:Name="DG_TabMusic" BorderBrush="{x:Null}" Background="{x:Null}" Margin="10,0,10,73" FontSize="16" MouseDoubleClick="DG_TabMusic_MouseDoubleClick" MouseRightButtonDown="DG_TabMusic_MouseRightButtonDown">
+                           
                             <DataGrid.Effect>
                                 <DropShadowEffect Direction="215" ShadowDepth="7" BlurRadius="10"/>
                             </DataGrid.Effect>
@@ -1006,10 +958,39 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
-                    <TextBox Style="{StaticResource MyTextBox}" HorizontalAlignment="Left" Height="25" Margin="10,13,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Top" Width="517" BorderBrush="{x:Null}" FontSize="14"/>
+                    <TextBox x:Name="TB_TextSearch" Style="{StaticResource MyTextBox}" HorizontalAlignment="Left" Height="25" Margin="10,13,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Top" Width="517" BorderBrush="{x:Null}" FontSize="14"/>
                     <Button x:Name="Button_OpenMusic_Copy"  Width="132" Content="Open file" 
                         VerticalAlignment="Top" FontFamily="Segoe UI Semibold" Margin="567,-31,0,0" 
                         Height="26" FontSize="18" Foreground="#FF212121" Background="Black" HorizontalAlignment="Left" Click="Button_OpenPath_Click" >
+                        <Button.Template>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border x:Name="buttonBorder" CornerRadius="5"
+                                    BorderBrush="{x:Null}" Background="#FFE29539"
+                                    Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"  >
+
+                                    <ContentControl Margin="{TemplateBinding Padding}"
+                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                        Content="{TemplateBinding Content}" />
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="true">
+                                        <Setter TargetName="buttonBorder" Property="Background" Value="#FF497893" />
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="true">
+                                        <Setter TargetName="buttonBorder" Property="Opacity" Value="0.6" />
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="false">
+                                        <Setter Property="Foreground" Value="Gray"/>
+                                        <Setter TargetName="buttonBorder" Property="Background" Value="LightGray"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <Button x:Name="Button_Search"  Width="132" Content="Search" 
+                        VerticalAlignment="Top" FontFamily="Segoe UI Semibold" Margin="545,13,0,0" 
+                        Height="26" FontSize="18" Foreground="#FF212121" Background="Black" HorizontalAlignment="Left" Click="Button_Search_Click" >
                         <Button.Template>
                             <ControlTemplate TargetType="{x:Type Button}">
                                 <Border x:Name="buttonBorder" CornerRadius="5"

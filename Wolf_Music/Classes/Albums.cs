@@ -11,7 +11,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace Wolf_Music.Classes
 {
-    class Albums : SearchClass, IAlbums
+    class Albums : IAlbums
     {
         string __Image;
         string __name;

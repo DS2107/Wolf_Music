@@ -13,7 +13,7 @@ using Wolf_Music.Classes;
 
 namespace Wolf_Music.Classes
 {
-    class Music : SearchClass, IMusic
+    class Music : IMusic
     {
         string __name;
         string __time;
