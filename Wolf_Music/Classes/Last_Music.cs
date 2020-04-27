@@ -48,11 +48,12 @@ namespace Wolf_Music.Classes
         {
             string pathmusic;
             List < Music > LastMusic = new List<Music>();
-            using (System.IO.StreamReader sr = new System.IO.StreamReader("PlayList.txt", System.Text.Encoding.Default))
+            using (System.IO.StreamReader sr = new System.IO.StreamReader("LastMusic.txt", System.Text.Encoding.Default))
             {
 
                 while ((pathmusic = sr.ReadLine()) != null)
                 {
+                    pathmusic = pathmusic.Remove(0, 8);
                     System.IO.FileInfo fileInf = new System.IO.FileInfo(pathmusic);
                     var audio = TagLib.File.Create(Convert.ToString(fileInf));
 

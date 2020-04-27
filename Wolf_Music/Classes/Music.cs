@@ -138,7 +138,9 @@ namespace Wolf_Music.Classes
 
         internal void timer_Tick(object sender, EventArgs e)
         {
+            
             ItemCollection MusicItem;
+            
             if (MainWindow.Instance.TabMyMusic.SelectedItem == MainWindow.Instance.PlayListTB)
             {
                MusicItem = MainWindow.Instance.DG_TabPlayList.Items;
@@ -165,8 +167,22 @@ namespace Wolf_Music.Classes
                 } //if
                 if (MainWindow.Instance.TotalTime == MainWindow.Instance.Media.Position)
                 {
-                    if (collectionMyMusic != null)
-                        NextMusic(collectionMyMusic);
+                  
+                  
+
+                    if (MainWindow.Instance.Replay)
+                    {
+                        MainWindow.Instance.Media.Source = MainWindow.Instance.Media.Source;
+                        MainWindow.Instance.Media.Position = TimeSpan.FromSeconds(0);
+                       
+                       MainWindow.Instance.Media.Play();
+                    }
+                    else
+                    {
+                        if (collectionMyMusic != null)
+                            AutoNextMusic(collectionMyMusic, true);
+                    }
+                  
                 } // if
             }
             catch
@@ -175,44 +191,42 @@ namespace Wolf_Music.Classes
             }
         }
 
-        Last_Music LM;
-        List<string> FileMusic = new List<string>();
-        private void NextMusic(ItemCollection items)
+      
+     
+        private void AutoNextMusic(ItemCollection items, bool NextOrBack)
         {
-            LM = new Last_Music();
-            for (int i = 0; i < items.Count; i++)
+         
+            try
             {
-                var item = (Music)items[i];
-                if (new Uri(item.full_name) == MainWindow.Instance.Media.Source)
+
+
+                for (int i = 0; i < items.Count; i++)
                 {
-                    i++;
-                    var itemNext = (Music)items[i];
-                    MainWindow.Instance.Media.Source = new Uri(itemNext.full_name);
-                    FileInfo fileInf = new FileInfo(itemNext.full_name);
-                    var audio = TagLib.File.Create(Convert.ToString(fileInf));
-                    MainWindow.Instance.TB_MUsic.Text = itemNext.name;
-                    MainWindow.Instance.TB_album.Text = audio.Tag.Album;
-                    if (LastMusic.Count == 5)
+                    var item = (Music)items[i];
+                   
+                    if (new Uri(item.full_name) == MainWindow.Instance.Media.Source)
                     {
-                        LastMusic.Insert(0, item);
-                        LastMusic.RemoveAt(LastMusic.Count - 1);
-                        LastMusic.Add(item);
-
-                        FileMusic.Insert(0, item.full_name);
-                        FileMusic.RemoveAt(FileMusic.Count - 1);
-                        FileMusic.Add(item.full_name);
-                        LM.Save(FileMusic);
-
-                    }
-                    else
-                    {
-                        LastMusic.Add(item);
-                        FileMusic.Add(item.full_name);
-                        LM.Save(FileMusic);
+                        var its_item = (Music)items[i];
+                        if (NextOrBack)
+                            i++;
+                        else
+                            i--;
+                        var itemNext = (Music)items[i];
+                        MainWindow.Instance.Media.Source = new Uri(itemNext.full_name);
+                        FileInfo fileInf = new FileInfo(itemNext.full_name);
+                        var audio = TagLib.File.Create(Convert.ToString(fileInf));
+                        MainWindow.Instance.TB_MUsic.Text = itemNext.name;
+                        MainWindow.Instance.TB_album.Text = audio.Tag.Album;
+                     
                     }
                 }
             }
+            catch
+            {
+
+            }
         } // NextMusic
+
 
         public void OpenFile()
         {
@@ -231,6 +245,69 @@ namespace Wolf_Music.Classes
                 MainWindow.Instance.Media.Play();
 
             } // if  
+        }
+
+        /// <summary>
+        /// 1 песня вперед
+        /// </summary>
+        public void Next()
+        {
+            ItemCollection MusicItem;
+            if (MainWindow.Instance.TabMyMusic.SelectedItem == MainWindow.Instance.PlayListTB)
+            {
+                MusicItem = MainWindow.Instance.DG_TabPlayList.Items;
+                collectionMyMusic = MusicItem;
+            }
+
+            if (MainWindow.Instance.TabMyMusic.SelectedItem == MainWindow.Instance.TabMusic)
+            {
+                MusicItem = MainWindow.Instance.DG_TabMusic.Items;
+                collectionMyMusic = MusicItem;
+            }
+            AutoNextMusic(collectionMyMusic,true);
+           
+
+            } // Next
+
+        // 1 назад
+        public void Back()
+        {
+            ItemCollection MusicItem;
+            if (MainWindow.Instance.TabMyMusic.SelectedItem == MainWindow.Instance.PlayListTB)
+            {
+                MusicItem = MainWindow.Instance.DG_TabPlayList.Items;
+                collectionMyMusic = MusicItem;
+            }
+
+            if (MainWindow.Instance.TabMyMusic.SelectedItem == MainWindow.Instance.TabMusic)
+            {
+                MusicItem = MainWindow.Instance.DG_TabMusic.Items;
+                collectionMyMusic = MusicItem;
+            }
+            AutoNextMusic(collectionMyMusic, false);
+        } // Back
+
+        public List<Music> Mix(ItemCollection items)
+        {
+           
+            Random random = new Random();
+            List<Music> music = new List<Music>();
+            foreach(Music item in items)
+            {
+                music.Add(item);
+            }
+            for (int i = music.Count - 1; i >= 1; i--)
+            {
+                int j = random.Next(i + 1);
+                // обменять значения data[j] и data[i]
+                var temp = music[j];
+                music[j] = music[i];
+                music[i] = temp;
+            }
+
+           
+            return music;
+
         }
     } // Music
 }

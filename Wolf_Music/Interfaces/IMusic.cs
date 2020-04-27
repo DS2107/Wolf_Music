@@ -33,7 +33,15 @@ namespace Wolf_Music.Interfaces
 
     void  PlayMus(string nameMusic, ItemCollection collection, Music play);
 
+    void Next();
+
+
+    void Back();
+
+
     void OpenFile();
+
+        List<Music> Mix(ItemCollection items);
 
     } // IMusic
 }

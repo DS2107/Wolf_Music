@@ -66,8 +66,8 @@ namespace Wolf_Music
 
             InitializeComponent();
             Instance = this;
-           
-            
+
+           DG_TabLastMusic.ItemsSource =  LM.Load();
             myThread = new Thread(new ThreadStart(loadAlb));
             myThread.Start();
          
@@ -249,7 +249,7 @@ namespace Wolf_Music
             play.OpenFile();
         } //Button_OpenPath_Click
 
-      
+
         #endregion
 
         #region MediaElem
@@ -258,12 +258,22 @@ namespace Wolf_Music
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        List<string> FileMusic = new List<string>();
+        Last_Music LM = new Last_Music();
         private void Media_MediaOpened(object sender, RoutedEventArgs e)
         {
+         
+            FileMusic.Add(Media.Source.ToString());
+            if (FileMusic.Count >= 9)
+            {
+                FileMusic.Insert(0, Media.Source.ToString());
+                FileMusic.RemoveAt(FileMusic.Count-1);
+                FileMusic.RemoveAt(FileMusic.Count - 1);
 
-            
+            }
+            LM.Save(FileMusic);
 
-                TotalTime = Media.NaturalDuration.TimeSpan;
+            TotalTime = Media.NaturalDuration.TimeSpan;
                 SliderPlay.Maximum = TotalTime.TotalSeconds;
 
                 timerVideoTime.Interval = TimeSpan.FromSeconds(1);
@@ -424,5 +434,49 @@ namespace Wolf_Music
             var audios = api.Audio.Get(s);
            
         }
+
+        private void Button_Next_Click(object sender, RoutedEventArgs e)
+        {
+            play.Next();
+        }
+
+        private void Button_Back_Click(object sender, RoutedEventArgs e)
+        {
+            play.Back();
+        }
+
+        private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ItemCollection MusicItem = null;
+
+            if (TabMyMusic.SelectedItem == PlayListTB)          
+                MusicItem = DG_TabPlayList.Items;
+
+
+
+            if (TabMyMusic.SelectedItem == TabMusic) 
+                MusicItem = DG_TabMusic.Items;
+
+            if (TabMyMusic.SelectedItem == PlayListTB)
+                DG_TabPlayList.ItemsSource = play.Mix(MusicItem);
+
+            if (TabMyMusic.SelectedItem == TabMusic)
+                DG_TabMusic.ItemsSource =  play.Mix(MusicItem);
+        }
+       public bool Replay = false;
+        private void Image_MouseLeftButtonDown_1(object sender, MouseButtonEventArgs e)
+        {
+            if(Replay == false)
+            {
+                Replay = true;
+                
+            }
+            else
+            {
+                Replay = false;
+            }
+        }
+
+       
     }
 }
