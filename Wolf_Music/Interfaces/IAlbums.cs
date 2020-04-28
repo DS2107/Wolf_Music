@@ -20,13 +20,7 @@ namespace Wolf_Music.Interfaces
         /// <summary>
         /// Общее время альбома
         /// </summary>
-        double time { get; set; }
-
-        /// <summary>
-        ///  Музыка в альбоме
-        /// </summary>
-        /// <returns></returns>
-        List<string> MyMusic();
+        double time { get; set; }     
 
         /// <summary>
         /// Создать альбом
@@ -36,18 +30,8 @@ namespace Wolf_Music.Interfaces
         /// <returns></returns>
         void Create(string image, string name,string imageName); 
 
-        /// <summary>
-        /// Удаление альбома, каждому альбому будет присваеваться уникальное имя и удаление по нему же
-        /// </summary>
-        /// <param name="name">Имя альбома</param>
-        /// <returns></returns>
-        bool Delete(List<Albums> name);
+       
 
-        /// <summary>
-        ///  Реактирование альбома
-        /// </summary>      
-        /// <param name="name">Имя альбома</param>
-        /// <returns></returns>
-        bool Edit(string name); 
+       
     } // IAlbums
 }

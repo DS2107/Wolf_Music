@@ -12,10 +12,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
-using VkNet;
-using VkNet.Enums.Filters;
-using VkNet.Model;
-using VkNet.Model.RequestParams;
 using Wolf_Music.Classes;
 
 
@@ -370,35 +366,15 @@ namespace Wolf_Music
 
         private void delete()
         {
-            if (albums.Delete(a1))
+            EditAlbum editAlbu = new EditAlbum();
+            if (editAlbu.Delete(a1))
             {
                 Dispatcher.Invoke(() => DG_TabPlayLists.ItemsSource = null);
                 Dispatcher.Invoke(() => DG_TabPlayLists.ItemsSource = albums.Loading());
             }
         }
 
-        private void Button_help_Click(object sender, RoutedEventArgs e)
-        {
-            var api = new VkApi();
-            api.Authorize(new ApiAuthParams
-            {
-                ApplicationId = 123456,
-                Login = "380993807883",
-                Password = "09mosila",
-                Settings = Settings.All
-            });
-            Console.WriteLine(api.Token);
-            var res = api.Groups.Get(new GroupsGetParams());
-
-            Console.WriteLine(res.TotalCount);
-            User user = new User();
-            AudioGetParams s = new AudioGetParams();
-            s.OwnerId = api.UserId;
-            s.Count = 6000;
-            
-            var audios = api.Audio.Get(s);
-           
-        }
+        
 
         private void Button_Next_Click(object sender, RoutedEventArgs e)
         {

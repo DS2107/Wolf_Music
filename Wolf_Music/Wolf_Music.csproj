@@ -100,12 +100,6 @@
     <Reference Include="taglib-sharp, Version=2.1.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
       <HintPath>..\packages\taglib.2.1.0.0\lib\taglib-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="VkNet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VkNet.1.50.0\lib\net461\VkNet.dll</HintPath>
-    </Reference>
-    <Reference Include="VkNet.AudioBypassService, Version=1.5.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VkNet.AudioBypassService.1.5.3\lib\net461\VkNet.AudioBypassService.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -116,6 +110,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Classes\Edit.cs" />
+    <Compile Include="Classes\EditAlbum.cs" />
     <Compile Include="Interfaces\EditInterface.cs" />
     <Compile Include="RedactWin.xaml.cs">
       <DependentUpon>RedactWin.xaml</DependentUpon>

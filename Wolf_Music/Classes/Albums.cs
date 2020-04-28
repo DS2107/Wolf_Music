@@ -245,28 +245,8 @@ namespace Wolf_Music.Classes
             return firstAlbum;
         }
 
-        public bool Delete(List<Albums> name)
-        {
-            System.Threading.Thread.Sleep(5000);
-            foreach (var collect in name)
-            {
-               // FileStream fs = new FileStream(collect.Image, FileMode.Open);
-               // fs.Close();
-              
-                Directory.Delete(collect.FullName,true);
-                // albums.FullName
-            }
-            return true;
-        }
+       
 
-        public bool Edit(string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<string> MyMusic()
-        {
-            throw new NotImplementedException();
-        }
+       
     } // Albums
 }

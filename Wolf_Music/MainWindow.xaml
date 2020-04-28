@@ -10,8 +10,6 @@
         WindowStartupLocation="CenterScreen" Icon="Image\Logo.png" MouseLeftButtonDown="MainWindow_WolfMusic_MouseLeftButtonDown">
     <Window.Resources>
 
-
-
         <Style x:Key="ScaleStyle" TargetType="Image">
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
@@ -27,10 +25,10 @@
         </Style>
         <!-- Border -->
         <Style x:Key="MyControlBorder" TargetType="{x:Type Border}">
-            <Setter Property="BorderBrush" Value="DarkKhaki" />
-            <Setter Property="Background" Value="White" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="BorderBrush" Value="DarkKhaki"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="CornerRadius" Value="6"/>
         </Style>
 
         <!-- TextBox -->
@@ -860,7 +858,7 @@
                     </Grid>
                     <Grid  Margin="540,153,0,200" HorizontalAlignment="Left" Width="321" />
                     <DataGrid  HeadersVisibility="Column" CanUserAddRows="false"  HorizontalGridLinesBrush="{x:Null}"  VerticalGridLinesBrush="{x:Null}" AutoGenerateColumns="False"  x:Name="DG_TabLastMusic" BorderBrush="{x:Null}" Background="{x:Null}" Margin="210,64,10,73" FontSize="16" MouseDoubleClick="DG_TabMusic_MouseDoubleClick">
-                       
+
                         <DataGrid.Effect>
                             <DropShadowEffect Direction="215" ShadowDepth="7" BlurRadius="10"/>
                         </DataGrid.Effect>
@@ -945,7 +943,7 @@
 
 
                         <DataGrid  HeadersVisibility="Column" CanUserAddRows="false"  HorizontalGridLinesBrush="{x:Null}"  VerticalGridLinesBrush="{x:Null}" AutoGenerateColumns="False"  x:Name="DG_TabMusic" BorderBrush="{x:Null}" Background="{x:Null}" Margin="10,0,10,73" FontSize="16" MouseDoubleClick="DG_TabMusic_MouseDoubleClick" MouseRightButtonDown="DG_TabMusic_MouseRightButtonDown">
-                           
+
                             <DataGrid.Effect>
                                 <DropShadowEffect Direction="215" ShadowDepth="7" BlurRadius="10"/>
                             </DataGrid.Effect>
