@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,29 +49,38 @@ namespace Wolf_Music.Classes
         {
             string pathmusic;
             List < Music > LastMusic = new List<Music>();
-            using (System.IO.StreamReader sr = new System.IO.StreamReader("LastMusic.txt", System.Text.Encoding.Default))
+            if (File.Exists("LastMusic.txt"))
             {
 
-                while ((pathmusic = sr.ReadLine()) != null)
+
+                using (System.IO.StreamReader sr = new System.IO.StreamReader("LastMusic.txt", System.Text.Encoding.Default))
                 {
-                    pathmusic = pathmusic.Remove(0, 8);
-                    System.IO.FileInfo fileInf = new System.IO.FileInfo(pathmusic);
-                    var audio = TagLib.File.Create(Convert.ToString(fileInf));
 
-
-                    Music music = new Music
+                    while ((pathmusic = sr.ReadLine()) != null)
                     {
-                        smalName = audio.Tag.Title,
-                        name = fileInf.Name,
-                        full_name = fileInf.FullName,
-                        music_album_playlist = audio.Tag.Album,
-                        time = audio.Properties.Duration.ToString("mm\\:ss")
-                    };
-                    LastMusic.Add(music);
-                }
-            }
+                        pathmusic = pathmusic.Remove(0, 8);
+                        System.IO.FileInfo fileInf = new System.IO.FileInfo(pathmusic);
+                        var audio = TagLib.File.Create(Convert.ToString(fileInf));
 
+
+                        Music music = new Music
+                        {
+                            smalName = audio.Tag.Title,
+                            name = fileInf.Name,
+                            full_name = fileInf.FullName,
+                            music_album_playlist = audio.Tag.Album,
+                            time = audio.Properties.Duration.ToString("mm\\:ss")
+                        };
+                        LastMusic.Add(music);
+                    }
+                }
                 return LastMusic;
+            }
+            else
+            {
+                return null;
+            }
+                
         }
     } // Last_Music
 }

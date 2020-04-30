@@ -116,7 +116,7 @@ namespace Wolf_Music.Classes
                         line = sr.ReadLine();
                         sr.Close();
                     }
-                        string nameParth = line + @"\" + name;
+                        string nameParth = line + @"\" + name + ".wm3"; ;
                     DirectoryInfo dirInfo = new DirectoryInfo(nameParth);
                     dirInfo.Create();
                     string fullName = nameParth + @"\" + name + ".txt";
@@ -166,83 +166,91 @@ namespace Wolf_Music.Classes
         public List<Albums> Loading()
         {
             List<Albums> firstAlbum = new List<Albums>();
-            using (StreamReader sr = new StreamReader("PlayList.txt", System.Text.Encoding.Default))
+            if (File.Exists("PlayList.txt"))
             {
-
-                line = sr.ReadLine();
-                sr.Close();
-            }
-            List<Music> musics = null;
-            string[] dirs = Directory.GetDirectories(line);
-            List<string> pathPlayList = new List<string>();
-            foreach (string s in dirs)
-            {
-                if(s.Substring(s.Length - 4) == ".wm3")
+                using (StreamReader sr = new StreamReader("PlayList.txt", System.Text.Encoding.Default))
                 {
-                    pathPlayList.Add(s);
+
+                    line = sr.ReadLine();
+                    sr.Close();
                 }
-               
-            }
-            Music MusicInPlayList = new Music();
-            foreach(var path in pathPlayList)
-            {
-              
-                string[] filePLayList = Directory.GetFiles(path);
-                FullName = path;
-                foreach(var file in filePLayList)
+                List<Music> musics = null;
+                string[] dirs = Directory.GetDirectories(line);
+                List<string> pathPlayList = new List<string>();
+                foreach (string s in dirs)
                 {
-                    FileInfo m1 = new FileInfo(file);
-                 
-                    if (m1.Name == "Foto.txt")
+                    if (s.Substring(s.Length - 4) == ".wm3")
                     {
-                        using (StreamReader sr = new StreamReader(file, System.Text.Encoding.Default))
-                        {
-                           string line2 = sr.ReadLine();
-                            Image = line2;
-                            sr.Close();
-                        }
-                       
+                        pathPlayList.Add(s);
                     }
-                    else if (m1.Name != "Foto.txt")
+
+                }
+                Music MusicInPlayList = new Music();
+                foreach (var path in pathPlayList)
+                {
+
+                    string[] filePLayList = Directory.GetFiles(path);
+                    FullName = path;
+                    foreach (var file in filePLayList)
                     {
-                        musics = new List<Music>();
-                        name = Path.GetFileName(file);
-                        name = name.Substring(0, name.Length - 4);
-                        using (StreamReader sr = new StreamReader(file, System.Text.Encoding.Default))
+                        FileInfo m1 = new FileInfo(file);
+
+                        if (m1.Name == "Foto.txt")
                         {
-                            string pathmusic;
-
-                            while ((pathmusic = sr.ReadLine()) != null)
+                            using (StreamReader sr = new StreamReader(file, System.Text.Encoding.Default))
                             {
-                                FileInfo fileInf = new FileInfo(pathmusic);
-                                var audio = TagLib.File.Create(Convert.ToString(fileInf));
+                                string line2 = sr.ReadLine();
+                                Image = line2;
+                                sr.Close();
+                            }
 
+                        }
+                        else if (m1.Name != "Foto.txt")
+                        {
+                            musics = new List<Music>();
+                            name = Path.GetFileName(file);
+                            name = name.Substring(0, name.Length - 4);
+                            using (StreamReader sr = new StreamReader(file, System.Text.Encoding.Default))
+                            {
+                                string pathmusic;
 
-                                Music music = new Music
+                                while ((pathmusic = sr.ReadLine()) != null)
                                 {
-                                    smalName = audio.Tag.Title,
-                                    name = fileInf.Name,
-                                    full_name = fileInf.FullName,
-                                    music_album_playlist = audio.Tag.Album,
-                                    time = audio.Properties.Duration.ToString("mm\\:ss")
-                                };
-                                musics.Add(music);
+                                    FileInfo fileInf = new FileInfo(pathmusic);
+                                    var audio = TagLib.File.Create(Convert.ToString(fileInf));
+
+
+                                    Music music = new Music
+                                    {
+                                        smalName = audio.Tag.Title,
+                                        name = fileInf.Name,
+                                        full_name = fileInf.FullName,
+                                        music_album_playlist = audio.Tag.Album,
+                                        time = audio.Properties.Duration.ToString("mm\\:ss")
+                                    };
+                                    musics.Add(music);
+                                }
                             }
                         }
                     }
+
+                    Albums albums = new Albums
+                    {
+                        Image = Image,
+                        name = name,
+                        MyMusicInPlayList = musics,
+                        FullName = FullName
+                    };
+
+                    firstAlbum.Add(albums);
                 }
-               
-                Albums albums = new Albums
-                {
-                    Image = Image,
-                    name = name,
-                    MyMusicInPlayList = musics,
-                    FullName = FullName
-                };
-               
-                firstAlbum.Add(albums);
+                return firstAlbum;
             }
-            return firstAlbum;
+            else
+            {
+                return null;
+            }
+           
         }
 
        
